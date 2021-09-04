@@ -30,6 +30,9 @@ class Bot():
         self.canvas = canvas
         self.premium = premium
 
+        self.AttemptSocketAuth()
+        print(f"{self.username} logged in")
+
         #Error 🖐ling 
         @self.socketconnection.on("throw.error")
         def Place_error(data):
