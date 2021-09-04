@@ -25,9 +25,14 @@ def logChat7(data):
 		{message}
 		Mentioned People:{messageMention}
 		"""
+        emojis = getBadges(messageIcons)
+        content2 = """
+        Badges> {emojis}
+        Logged <t:{timestamp}:R>
+        """
         timestamp = getTimeStamp()
         embed = {"description": f"{content}","title": "/7 Chat Message"}
-        whdata = {"content": f"Logged <t:{timestamp}:R>","username": "{messageUsername} - {messageGuild}","embeds": [embed],}
+        whdata = {"content": f"{content2}","username": "{messageUsername} - {messageGuild}","embeds": [embed],}
         postWebhook(webhook_global, whdata)
 		#Automod
 		#checkChatMessage()
@@ -45,9 +50,14 @@ def logChat8(data):
 		{message}
 		Mentioned People:{messageMention}
 		"""
-		timestamp = getTimeStamp()
-		embed = {"description": f"{content}","title": "/8 Chat Message"}
-		whdata = {"content": f"Logged <t:{timestamp}:R>","username": "{messageUsername} - {messageGuild}","embeds": [embed],}
+        emojis = getBadges(messageIcons)
+        content2 = """
+        Badges> {emojis}
+        Logged <t:{timestamp}:R>
+        """
+        timestamp = getTimeStamp()
+        embed = {"description": f"{content}","title": "/8 Chat Message"}
+        whdata = {"content": f"{content2}:R>","username": "{messageUsername} - {messageGuild}","embeds": [embed],}
     	postWebhook(webhook_mvp, whdata)
 		#Automod
 		#checkChatMessage()
@@ -86,9 +96,32 @@ def postLeaves(data):
     embed = {"description": f"{content}","title": "Leaves"}
     whdata = {"content": f"Logged <t:{timestamp}:R>","username": "Leaves","embeds": [embed],}
     postWebhook(webhook_onoff, whdata)
-	
-#def checkChatMessage(message,username):
-#	if chat message smth smth in file ban username or inform xy idk
+	#gonna gi get food ~15 min
+def checkChatMessage(message,username,canvas):
+    spltmsg = message.split()
+    with open('filter.txt') as filter:
+        for slur in filter.read():
+            for word in spltmsg:
+                if slur.contains(f"{word}"):
+                    bot7.send_Chat("You have sent a message in chat which is against PixelPlace Terms of Service. The Staff Team will be informed",f"{username}","whispers",f"{username}")
+                    time.sleep(0.8)
+                    bot7.send_Chat("Please refrain from doing so in the future or your account will be muted.",f"{username}","whispers",f"{username}")
+                    timestamp = getTimeStamp()
+                    content = """
+                    {username} said {message}.
+                    <@&835970992819273748>
+                    """
+                    embed = {"description": f"{content}","title": "Bad word detected!"} 
+                    whdata = {"content": f"Logged <t:{timestamp}:R>","username": "Mods alerts","embeds": [embed],}
+                    postWebhook(webhook_stats, whdata)
+
+def getBadges(messageIcons):
+    emojilist = []
+    #idk if this will work first try
+    #"icons":["1-year","moderator","nitro","bread"]
+    for iconname in messageIcons:
+        emojilist.append(f":{iconname}:")
+    return emojilist
 
 def getTimeStamp():
 	epoch = str(time.time()).split(".")[0]

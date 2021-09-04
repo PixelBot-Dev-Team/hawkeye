@@ -137,7 +137,10 @@ class Bot():
         authinfo = self.get_auth(driver.get_cookies())
         driver.quit()
         return authinfo
-        
+
+    def send_Chat(self, text, mention, type, target, color):
+        self.socketconnection.emit(event="chat.message", data={"text": str(text), "mention": str(mention), "type": str(type), "target": str(target), "color": int(color)})
+     
     #Attempt to 🔗 via socketio
     def AttemptSocketAuth(self):
         self.socketconnection.connect("https://pixelplace.io/socket.io/", transports='websocket', namespaces=["/",])
