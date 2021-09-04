@@ -44,26 +44,25 @@ def logChat7(data):
     messageUsername = data["username"]
     messageGuild = data["guild"]
     message = data["message"]
+    if message == "":
+        message = "/here"
     messageIcons = data["icons"]
     messageChannel = data["channel"]
     messageMention = data["mention"]
     if messageChannel == "global":
+        if messageMention == "":
+            messageMention = "None"
         content = f"""
-		{message}
-		Mentioned People:{messageMention}
-		"""
-        emojis = getBadges(messageIcons)
-        timestamp = getTimeStamp()
-        content2 = f"""
-        Badges> {emojis}
-    Logged <t:{timestamp}:R>
+        {message}
+        Mentioned People:{messageMention}
         """
         timestamp = getTimeStamp()
+        content2 = f"Logged <t:{timestamp}:R>"
+        timestamp = getTimeStamp()
         embed = {"description": f"{content}","title": "/7 Chat Message"}
-        whdata = {"content": f"{content2}","username": "{messageUsername} - {messageGuild}","embeds": [embed],}
+        whdata = {"content": f"{content2}","username": f"{messageUsername} - {messageGuild}","embeds": [embed],}
         postWebhook(webhook_global, whdata)
-		#Automod
-		#checkChatMessage()
+        checkChatMessage(message, messageUsername)
 
 @bot8.socketconnection.on("chat.user.message")
 @background
@@ -75,52 +74,35 @@ def logChat8(data):
     messageUsername = data["username"]
     messageGuild = data["guild"]
     message = str(data["message"])
+    if message == "":
+        message = "/here"
     messageIcons = data["icons"]
     messageChannel = data["channel"]
     messageMention = data["mention"]
     if messageChannel == "painting":
-    	content = f"""
+        content = f"""
         {message}
         Mentioned People:{messageMention}
         """
-    	emojis = getBadges(messageIcons)
-    	timestamp = getTimeStamp()
-        content2 = f"""
-    	Badges> {emojis}
-    Logged <t:{timestamp}:R>
-    	"""
+        timestamp = getTimeStamp()
+        content2 = f"Logged <t:{timestamp}:R>"
         embed = {"description": f"{content}","title": "/8 Chat Message"}
-        whdata = {"content": f"{content2}","username": "{messageUsername} - {messageGuild}","embeds": [embed],}
+        whdata = {"content": f"{content2}","username": f"{messageUsername} - {messageGuild}","embeds": [embed],}
         postWebhook(webhook_mvp, whdata)
-    	#Automod
-    	#checkChatMessage()
-
-#get /8 Specific Data   
-@bot8.socketconnection.on("chat.stats")
-@background
-def update8Stats(data):
-    global canvas8Stat
-    canvas8Stat = data[0]
+        checkChatMessage(message, messageUsername)
 
 @bot7.socketconnection.on("chat.stats")
 @background
 def postChatStats(data):
-    global canvas8Stat
     canvas7Stat = data[0]
     totalStat = data[1]
-    if canvas8Stat == "":
-        canvas8Stat = "Couldnt get Data"
-    elif canvas8Stat != "":
-        canvas8Stat = f"{canvas8Stat}"
     content = f"""
     Players on Canvas 7>{canvas7Stat}
-    Players on Canvas 8>{canvas8Stat}
     Players in total>{totalStat}"""
     timestamp = getTimeStamp()
     embed = {"description": f"{content}","title": "Stats", "color": 16776958} #white
     whdata = {"content": f"Logged <t:{timestamp}:R>","username": "Stats","embeds": [embed],}
     postWebhook(webhook_stats, whdata)
-    prev8Stat = canvas8Stat
 
 @bot7.socketconnection.on("j")
 @background
@@ -141,29 +123,21 @@ def postLeaves(data):
     whdata = {"content": f"Logged <t:{timestamp}:R>","username": "Leaves","embeds": [embed],}
     postWebhook(webhook_onoff, whdata)
 
+#check at a later point https://forms.gle/Ti9BoJEmDvzVGnwq7
 def checkChatMessage(message,username):
-    spltmsg = message.split()
-    #check at a later point https://forms.gle/Ti9BoJEmDvzVGnwq7
-    with open('filter.txt') as filter:
-        for slur in filter.read():
-            for word in spltmsg:
-                if slur in f"{word}":
-                    bot7.send_Chat("You have sent a message in chat which is against PixelPlace Terms of Service. The Staff Team will be informed.",f"{username}","whispers",f"{username}")
-                    time.sleep(0.8)
-                    bot7.send_Chat("Please refrain from doing so in the future or your account will be muted.",f"{username}","whispers",f"{username}")
-                    timestamp = getTimeStamp()
+    file = open("filter.txt",'r')
+    slurlist = file.readlines()
+    for slur in slurlist:
+        if slur in message:
+                #bot7.send_Chat("You have sent a message in chat which is against PixelPlace Terms of Service. The Staff Team will be informed.",f"{username}","whispers",f"{username}", 21)
+                time.sleep(0.8)
+                #bot7.send_Chat("Please refrain from doing so in the future or your account will be muted.",f"{username}","whispers",f"{username}", 21)
+                timestamp = getTimeStamp()
 
-                    embed = {"description": f"Logged <t:{timestamp}:R>","title": "Bad word detected!", "fields" : [{"name" : "Username", "value" : f"{username}"}, {"name" : "Message", "value" : f"{message}"}], "color": 14662147} #yellow
-                    whdata = {"content": "<@&835970992819273748>","username": "AutoMod","embeds": [embed],}
-                    postWebhook(webhook_mods, whdata)
-
-def getBadges(messageIcons):
-    emojilist = []
-    #idk if this will work first try
-    #"icons":["1-year","moderator","nitro","bread"]
-    for iconname in messageIcons:
-        emojilist.append(f":{iconname}: ")
-    return emojilist
+                embed = {"description": f"Logged <t:{timestamp}:R>","title": "Bad word detected!", "fields" : [{"name" : "Username", "value" : f"{username}"}, {"name" : "Message", "value" : f"{message}"}], "color": 14662147} #yellow
+                whdata = {"content": "<@&835970992819273748>","username": "AutoMod","embeds": [embed],}
+                postWebhook(webhook_mods, whdata)
+    file.close()
 
 def getTimeStamp():
 	epoch = str(time.time()).split(".")[0]
@@ -179,3 +153,10 @@ def postWebhook(url, data):
 if __name__ == "__main__":
     while True:
         time.sleep(99999)
+
+#TODO
+#Add check if data is same for leave/join
+#fix automod
+#pray icons work
+#MaKe EmBeDs PrEtTy
+#user icons
