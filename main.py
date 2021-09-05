@@ -15,6 +15,8 @@ webhook_mods = "https://discord.com/api/webhooks/883807042656157828/053ufcOenaZo
 
 start_time = datetime.datetime.utcnow()
 
+CurrentDir = pathlib.Path(__file__).parent.absolute()
+
 def background(f):
     '''
     a threading decorator
