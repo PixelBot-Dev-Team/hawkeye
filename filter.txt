@@ -16,3 +16,5 @@ pixelcanvas
 canvas.place
 pxls.space
 ourworldofpixels
+owop
+SpecialSlurWord

@@ -129,9 +129,9 @@ def checkChatMessage(message,username):
     slurlist = file.readlines()
     for slur in slurlist:
         if slur in message:
-                #bot7.send_Chat("You have sent a message in chat which is against PixelPlace Terms of Service. The Staff Team will be informed.",f"{username}","whispers",f"{username}", 21)
+                bot7.send_Chat("You have sent a message in chat which is against PixelPlace Terms of Service. The Staff Team will be informed.",f"{username}","whispers",f"{username}", 21)
                 time.sleep(0.8)
-                #bot7.send_Chat("Please refrain from doing so in the future or your account will be muted.",f"{username}","whispers",f"{username}", 21)
+                bot7.send_Chat("Please refrain from doing so in the future or your account will be muted.",f"{username}","whispers",f"{username}", 21)
                 timestamp = getTimeStamp()
 
                 embed = {"description": f"Logged <t:{timestamp}:R>","title": "Bad word detected!", "fields" : [{"name" : "Username", "value" : f"{username}"}, {"name" : "Message", "value" : f"{message}"}], "color": 14662147} #yellow
@@ -146,7 +146,7 @@ def getTimeStamp():
 def postWebhook(url, data):
     result = requests.post(url, json=data)
     if 200 <= result.status_code < 300:
-        print(f"Webhook sent {result.status_code}")
+        print(f"Webhook sent {result.status_code} - Data: {data}")
     else:
         print(f"Not sent with {result.status_code}, response:\n{result.json()}")
 
