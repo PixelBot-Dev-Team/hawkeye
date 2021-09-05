@@ -125,15 +125,11 @@ def postJoins(data):
         file = open(f"{CurrentDir}\\banned.txt",'r')
         banned = file.read().splitlines()
         username.lower
-        for name in banned:
-            name.lower()
-            if banned in username:
-                timestamp = getTimeStamp()
-                embed = {"description": f"Logged <t:{timestamp}:R>","title": "Permabanned User Detected!", "fields" : [{"name" : "Username", "value" : f"{username}"}], "color": 13571349} #red
-                whdata = {"content": "<@&835970992819273748>","username": "AutoMod","embeds": [embed],}
-                postWebhook(webhook_mods, whdata)
-
-
+        if username in str(banned).lower():
+            timestamp = getTimeStamp()
+            embed = {"description": f"Logged <t:{timestamp}:R>","title": "Permabanned User Detected!", "fields" : [{"name" : "Username", "value" : f"{username}"}], "color": 13571349} #red
+            whdata = {"content": "<@&835970992819273748>","username": "AutoMod","embeds": [embed],}
+            postWebhook(webhook_mods, whdata)
 
 @bot7.socketconnection.on("l")
 @background
