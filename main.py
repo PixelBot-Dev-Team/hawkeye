@@ -118,6 +118,18 @@ def postJoins(data):
 	    embed = {"description": f"{content}","title": "Joins", "color": 2531122} #green
 	    whdata = {"content": f"Logged <t:{timestamp}:R>","username": "Joins","embeds": [embed],}
 	    postWebhook(webhook_onoff, whdata)
+    file = open(f"{CurrentDir}\\banned.txt",'r')
+    banned = file.read().splitlines()
+    for name in banned:
+        name.lower()
+        username.lower
+        if banned in username:
+            timestamp = getTimeStamp()
+            embed = {"description": f"Logged <t:{timestamp}:R>","title": "Permabanned User Detected!", "fields" : [{"name" : "Username", "value" : f"{username}"}], "color": 13571349} #red
+            whdata = {"content": "<@&835970992819273748>","username": "AutoMod","embeds": [embed],}
+            postWebhook(webhook_mods, whdata)
+
+
 
 @bot7.socketconnection.on("l")
 @background
@@ -130,24 +142,21 @@ def postLeaves(data):
 
 #check at a later point https://forms.gle/Ti9BoJEmDvzVGnwq7
 def checkChatMessage(message,username):
-    message = str(message)
-    file = open("filter.txt",'r')
-    slurlist = file.readlines()
-    for slur in slurlist:
-        #ignore casing
-        slur.lower()
-        message.lower()
-        if slur in message:
-                bot7.send_Chat("You have sent a message in chat which is against PixelPlace Terms of Service. The Staff Team will be informed.",f"{username}","whispers",f"{username}", 21)
-                time.sleep(0.8)
-                bot7.send_Chat("Please refrain from doing so in the future or your account will be muted.",f"{username}","whispers",f"{username}", 21)
-                timestamp = getTimeStamp()
-
-                embed = {"description": f"Logged <t:{timestamp}:R>","title": "Bad word detected!", "fields" : [{"name" : "Username", "value" : f"{username}"}, {"name" : "Message", "value" : f"{message}"}], "color": 14662147} #yellow
-                whdata = {"content": "<@&835970992819273748>","username": "AutoMod","embeds": [embed],}
-                postWebhook(webhook_mods, whdata)
-    file.close()
-
+    spltmessage = message.split()
+    file = open(f"{CurrentDir}\\filter.txt",'r')
+    slurlist = file.read().splitlines()
+    for word in spltmessage:
+        word.lower()
+        if word in slurlist:
+            bot7.send_Chat("You have sent a message in chat which is against PixelPlace Terms of Service. The Staff Team will be informed.",f"{username}","whispers",f"{username}", 21)
+            time.sleep(0.8)
+            bot7.send_Chat("Please refrain from doing so in the future or your account will be muted.",f"{username}","whispers",f"{username}", 21)
+            timestamp = getTimeStamp()
+            embed = {"description": f"Logged <t:{timestamp}:R>","title": "Bad word detected!", "fields" : [{"name" : "Username", "value" : f"{username}"}, {"name" : "Message", "value" : f"{message}"}], "color": 14662147} #yellow
+            whdata = {"content": "<@&835970992819273748>","username": "AutoMod","embeds": [embed],}
+            postWebhook(webhook_mods, whdata)            
+        file.close()
+    
 def getTimeStamp():
 	epoch = str(time.time()).split(".")[0]
 	return epoch
