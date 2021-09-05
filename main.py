@@ -179,7 +179,7 @@ if __name__ == "__main__":
 
 #TODO
 #Add check if data is same for leave/join
-#fix automod
+#use sql lite thing
 #pray icons work
 #MaKe EmBeDs PrEtTy
 #user icons
