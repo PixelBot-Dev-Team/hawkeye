@@ -85,6 +85,8 @@ def logChat8(data):
     messageChannel = data["channel"]
     messageMention = data["mention"]
     if messageChannel == "painting":
+        if messageMention == "":
+            messageMention = "None"
         content = f"""
         {message}
         Mentioned People:{messageMention}
