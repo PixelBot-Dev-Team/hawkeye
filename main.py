@@ -3,6 +3,9 @@ import time
 import requests
 import threading
 import datetime
+import matplotlib.pyplot as plt
+import numpy as np
+
 
 webhook_onoff = "https://discord.com/api/webhooks/883775606540632075/hHrdNa-UHAaerqtoBWMdnenBsi0Tfd1-zsW78hPEIenvHNN1EA8IvEiNGvanko7zqiL_"
 webhook_mvp = "https://discord.com/api/webhooks/835654940008382464/RsN3Jjg8B6Ukv-8C09MfjktvyGrQztO4At2RIf27w4ZwmLpq_olf7kjr_YXPyAE8Cv43"
@@ -25,6 +28,8 @@ def background(f):
 bot8 = pypxl.Bot("pbt_ttt_6", '85*0zCHaNlAPbVm%bB^EC', 8)
 #/7 Bot
 bot7 = pypxl.Bot("pbt_ttt_5", "Ls7Wi041AA97YvST13m0xq", 7)
+
+onlineUsersHistory = [21, 43, 19, 83, 21] #test
 
 def chat_Safety_Check(data):
     createdAt = data["createdAt"]
@@ -125,9 +130,13 @@ def postLeaves(data):
 
 #check at a later point https://forms.gle/Ti9BoJEmDvzVGnwq7
 def checkChatMessage(message,username):
+    message = str(message)
     file = open("filter.txt",'r')
     slurlist = file.readlines()
     for slur in slurlist:
+        #ignore casing
+        slur.lower()
+        message.lower()
         if slur in message:
                 bot7.send_Chat("You have sent a message in chat which is against PixelPlace Terms of Service. The Staff Team will be informed.",f"{username}","whispers",f"{username}", 21)
                 time.sleep(0.8)
@@ -143,6 +152,10 @@ def getTimeStamp():
 	epoch = str(time.time()).split(".")[0]
 	return epoch
 
+def createChart(history):
+    plt.plot(history)
+    plt.show()
+
 def postWebhook(url, data):
     result = requests.post(url, json=data)
     if 200 <= result.status_code < 300:
@@ -151,6 +164,7 @@ def postWebhook(url, data):
         print(f"Not sent with {result.status_code}, response:\n{result.json()}")
 
 if __name__ == "__main__":
+    createChart()
     while True:
         time.sleep(99999)
 
