@@ -113,21 +113,21 @@ def postChatStats(data):
 @background
 def postJoins(data):
     if data != "":
-	    content = f"{data} joined!"
-	    timestamp = getTimeStamp()
-	    embed = {"description": f"{content}","title": "Joins", "color": 2531122} #green
-	    whdata = {"content": f"Logged <t:{timestamp}:R>","username": "Joins","embeds": [embed],}
-	    postWebhook(webhook_onoff, whdata)
-    file = open(f"{CurrentDir}\\banned.txt",'r')
-    banned = file.read().splitlines()
-    for name in banned:
-        name.lower()
+        content = f"{data} joined!"
+        timestamp = getTimeStamp()
+        embed = {"description": f"{content}","title": "Joins", "color": 2531122} #green
+        whdata = {"content": f"Logged <t:{timestamp}:R>","username": "Joins","embeds": [embed],}
+        postWebhook(webhook_onoff, whdata)
+        file = open(f"{CurrentDir}\\banned.txt",'r')
+        banned = file.read().splitlines()
         username.lower
-        if banned in username:
-            timestamp = getTimeStamp()
-            embed = {"description": f"Logged <t:{timestamp}:R>","title": "Permabanned User Detected!", "fields" : [{"name" : "Username", "value" : f"{username}"}], "color": 13571349} #red
-            whdata = {"content": "<@&835970992819273748>","username": "AutoMod","embeds": [embed],}
-            postWebhook(webhook_mods, whdata)
+        for name in banned:
+            name.lower()
+            if banned in username:
+                timestamp = getTimeStamp()
+                embed = {"description": f"Logged <t:{timestamp}:R>","title": "Permabanned User Detected!", "fields" : [{"name" : "Username", "value" : f"{username}"}], "color": 13571349} #red
+                whdata = {"content": "<@&835970992819273748>","username": "AutoMod","embeds": [embed],}
+                postWebhook(webhook_mods, whdata)
 
 
 
