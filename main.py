@@ -27,9 +27,9 @@ def background(f):
     return bg_f
 
 #/8 Bot
-bot8 = pypxl.Bot("pbt_ttt_4", "*f'~7]%C9C\c-?Ta", 8)
+bot8 = pypxl.Bot("ppbt_logbot", ">,PDF[e<$aDQ[2%=", 8)
 #/7 Bot
-bot7 = pypxl.Bot("pbt_ttt_5", "Ls7Wi041AA97YvST13m0xq", 7)
+bot7 = pypxl.Bot("ppbt_logbot1", "8gD;Ky$EV+De6za5^", 7)
 
 onlineUsersHistory = [21, 43, 19, 83, 21] #test
 
@@ -123,9 +123,8 @@ def postJoins(data):
         whdata = {"content": f"Logged <t:{timestamp}:R>","username": "Joins","embeds": [embed],}
         postWebhook(webhook_onoff, whdata)
         file = open(f"{CurrentDir}/banned.txt",'r')
-        banned = file.read().splitlines()
-        print(data.lower())
-        if data.lower() in str(banned):
+        bannedlist = file.read().splitlines()
+        if data.lower() in bannedlist:
             timestamp = getTimeStamp()
             embed = {"description": f"Logged <t:{timestamp}:R>","title": "Permabanned User Detected!", "fields" : [{"name" : "Username", "value" : f"{data}"}], "color": 13571349} #red
             whdata = {"content": "<@&835970992819273748>","username": "AutoMod","embeds": [embed],}
