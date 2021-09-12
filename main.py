@@ -122,6 +122,7 @@ def postJoins(data):
         embed = {"description": f"{content}","title": "Joins", "color": 2531122} #green
         whdata = {"content": f"Logged <t:{timestamp}:R>","username": "Joins","embeds": [embed],}
         postWebhook(webhook_onoff, whdata)
+        #This may or may not work
         file = open(f"{CurrentDir}/banned.txt",'r')
         bannedlist = file.read().splitlines()
         if data.lower() in bannedlist:
