@@ -9,6 +9,7 @@ import pathlib
 import socketio
 import platform
 import sys
+import pathlib
 CurrentDir = pathlib.Path(__file__).parent.absolute()
 
 class Bot():

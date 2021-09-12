@@ -5,7 +5,7 @@ import threading
 import datetime
 import matplotlib.pyplot as plt
 import numpy as np
-
+import pathlib
 
 webhook_onoff = "https://discord.com/api/webhooks/883775606540632075/hHrdNa-UHAaerqtoBWMdnenBsi0Tfd1-zsW78hPEIenvHNN1EA8IvEiNGvanko7zqiL_"
 webhook_mvp = "https://discord.com/api/webhooks/835654940008382464/RsN3Jjg8B6Ukv-8C09MfjktvyGrQztO4At2RIf27w4ZwmLpq_olf7kjr_YXPyAE8Cv43"
@@ -27,7 +27,7 @@ def background(f):
     return bg_f
 
 #/8 Bot
-bot8 = pypxl.Bot("pbt_ttt_6", '85*0zCHaNlAPbVm%bB^EC', 8)
+bot8 = pypxl.Bot("pbt_ttt_4", "*f'~7]%C9C\c-?Ta", 8)
 #/7 Bot
 bot7 = pypxl.Bot("pbt_ttt_5", "Ls7Wi041AA97YvST13m0xq", 7)
 
@@ -122,12 +122,12 @@ def postJoins(data):
         embed = {"description": f"{content}","title": "Joins", "color": 2531122} #green
         whdata = {"content": f"Logged <t:{timestamp}:R>","username": "Joins","embeds": [embed],}
         postWebhook(webhook_onoff, whdata)
-        file = open(f"{CurrentDir}\\banned.txt",'r')
+        file = open(f"{CurrentDir}/banned.txt",'r')
         banned = file.read().splitlines()
-        username.lower
-        if username in str(banned).lower():
+        print(data.lower())
+        if data.lower() in str(banned):
             timestamp = getTimeStamp()
-            embed = {"description": f"Logged <t:{timestamp}:R>","title": "Permabanned User Detected!", "fields" : [{"name" : "Username", "value" : f"{username}"}], "color": 13571349} #red
+            embed = {"description": f"Logged <t:{timestamp}:R>","title": "Permabanned User Detected!", "fields" : [{"name" : "Username", "value" : f"{data}"}], "color": 13571349} #red
             whdata = {"content": "<@&835970992819273748>","username": "AutoMod","embeds": [embed],}
             postWebhook(webhook_mods, whdata)
 
@@ -143,11 +143,10 @@ def postLeaves(data):
 #check at a later point https://forms.gle/Ti9BoJEmDvzVGnwq7
 def checkChatMessage(message,username):
     spltmessage = message.split()
-    file = open(f"{CurrentDir}\\filter.txt",'r')
+    file = open(f"{CurrentDir}/filter.txt",'r')
     slurlist = file.read().splitlines()
     for word in spltmessage:
-        word.lower()
-        if word in slurlist:
+        if word.lower() in slurlist:
             bot7.send_Chat("You have sent a message in chat which is against PixelPlace Terms of Service. The Staff Team will be informed.",f"{username}","whispers",f"{username}", 21)
             time.sleep(0.8)
             bot7.send_Chat("Please refrain from doing so in the future or your account will be muted.",f"{username}","whispers",f"{username}", 21)
@@ -156,6 +155,13 @@ def checkChatMessage(message,username):
             whdata = {"content": "<@&835970992819273748>","username": "AutoMod","embeds": [embed],}
             postWebhook(webhook_mods, whdata)            
         file.close()
+    file = open(f"{CurrentDir}/banned.txt",'r')
+    banned = file.read().splitlines()
+    if username.lower() in str(banned):
+        timestamp = getTimeStamp()
+        embed = {"description": f"Logged <t:{timestamp}:R>","title": "Permabanned User Detected!", "fields" : [{"name" : "Username", "value" : f"{username}"}], "color": 13571349} #red
+        whdata = {"content": "<@&835970992819273748>","username": "AutoMod","embeds": [embed],}
+        postWebhook(webhook_mods, whdata)
     
 def getTimeStamp():
 	epoch = str(time.time()).split(".")[0]
