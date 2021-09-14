@@ -31,8 +31,10 @@ def background(f):
 
 #/8 Bot
 bot8 = pypxl.Bot("ppbt_logbot", ">,PDF[e<$aDQ[2%=", 8)
+bot8Players = {}
 #/7 Bot
 bot7 = pypxl.Bot("ppbt_logbot1", "8gD;Ky$EV+De6za5^", 7)
+bot7Players = {}
 
 onlineUsersHistory = [21, 43, 19, 83, 21] #test
 
@@ -115,6 +117,29 @@ def postChatStats(data):
     embed = {"description": f"{content}","title": "Stats", "color": 16776958} #white
     whdata = {"content": f"Logged <t:{timestamp}:R>","username": "Stats","embeds": [embed],}
     postWebhook(webhook_stats, whdata)
+    postPlayersRequests()
+
+@background
+def postPlayersRequests():
+    bot7.socketconnection.emit(event="painting.players", data=7)
+    bot8.socketconnection.emit(event="painting.players", data=8)
+    time.sleep(4)
+
+@bot7.socketconnection.on("painting.players")
+@background
+def handlePaintingPlayers7(data):
+    bot7Players = data
+
+@bot8.socketconnection.on("painting.players")
+@background
+def handlePaintingPlayers8(data):
+    bot8Players = data
+
+#chat.stats - Charts 
+
+def WriteStatstoSQL(onlineCountTotal, onlineCount7, onlineCount8):
+    print("todo")
+
 
 @bot7.socketconnection.on("j")
 @background
@@ -128,7 +153,7 @@ def postJoins(data):
         #This may or may not work.
         file = open(f"{CurrentDir}/banned.txt",'r')
         bannedlist = file.read().splitlines()
-        if data.lower() in bannedlist:
+        if data.lower() in str(bannedlist):
             timestamp = getTimeStamp()
             embed = {"description": f"Logged <t:{timestamp}:R>","title": "Permabanned User Detected!", "fields" : [{"name" : "Username", "value" : f"{data}"}], "color": 13571349} #red
             whdata = {"content": "<@&835970992819273748>","username": "AutoMod","embeds": [embed],}
