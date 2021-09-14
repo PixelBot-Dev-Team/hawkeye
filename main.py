@@ -1,11 +1,14 @@
+from io import DEFAULT_BUFFER_SIZE
 import pypxl
 import time
 import requests
 import threading
 import datetime
 import matplotlib.pyplot as plt
-import numpy as np
 import pathlib
+import sqlite3
+
+onlineDatabase = sqlite3.connect("online.db")
 
 webhook_onoff = "https://discord.com/api/webhooks/883775606540632075/hHrdNa-UHAaerqtoBWMdnenBsi0Tfd1-zsW78hPEIenvHNN1EA8IvEiNGvanko7zqiL_"
 webhook_mvp = "https://discord.com/api/webhooks/835654940008382464/RsN3Jjg8B6Ukv-8C09MfjktvyGrQztO4At2RIf27w4ZwmLpq_olf7kjr_YXPyAE8Cv43"
