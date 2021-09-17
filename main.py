@@ -65,10 +65,14 @@ def logChat7(data):
     if messageChannel == "global":
         if messageMention == "":
             messageMention = "None"
-        content = f"""
-        {message}
-        Mentioned People:{messageMention}
-        """
+            content = f"""
+            {message}
+            """
+        else:
+            content = f"""
+            {message}
+            Mentioned People:{messageMention}
+            """
         timestamp = getTimeStamp()
         content2 = f"Logged <t:{timestamp}:R>"
         timestamp = getTimeStamp()
@@ -95,10 +99,14 @@ def logChat8(data):
     if messageChannel == "painting":
         if messageMention == "":
             messageMention = "None"
-        content = f"""
-        {message}
-        Mentioned People:{messageMention}
-        """
+            content = f"""
+            {message}
+            """
+        else:
+            content = f"""
+            {message}
+            Mentioned People:{messageMention}
+            """
         timestamp = getTimeStamp()
         content2 = f"Logged <t:{timestamp}:R>"
         embed = {"description": f"{content}","title": "/8 Chat Message"}
@@ -174,18 +182,9 @@ def postLeaves(data):
 def postMutes(data):
     print(data)
     timestamp = getTimeStamp()
-    embed = {"description": f"Logged <t:{timestamp}:R>","title": "Chat mute detected! (/7)", "fields" : [{"name" : "Muted user", "value" : f"{data}"}, {"name" : "Info", "value" : "We can only detect chat mutes that happened in /7 or /8 chat."}], "color": 13036340} #yellow
+    embed = {"description": f"Logged <t:{timestamp}:R>","title": "Chat mute detected!", "fields" : [{"name" : "Muted User", "value" : f"{data}"}, {"name" : "Info", "value" : "These logs are not official information. To appeal a mute, join the PixelPlace discord."}], "color": 13036340} #yellow
     whdata = {"content": "","username": "Chat Mutes","embeds": [embed],}
-    postWebhook(webhook_mutes, whdata)
-
-@bot8.socketconnection.on("chat.system.delete")
-@background
-def postMutes(data):
-    print(data)
-    timestamp = getTimeStamp()
-    embed = {"description": f"Logged <t:{timestamp}:R>","title": "Chat mute detected! (/8)", "fields" : [{"name" : "Muted user", "value" : f"{data}"}, {"name" : "Info", "value" : "We can only detect chat mutes that happened in /7 or /8 chat."}], "color": 13036340} #yellow
-    whdata = {"content": "","username": "Chat Mutes","embeds": [embed],}
-    postWebhook(webhook_mutes, whdata)              
+    postWebhook(webhook_mutes, whdata)      
 
 #check at a later point https://forms.gle/Ti9BoJEmDvzVGnwq7
 def checkChatMessage(message,username):
