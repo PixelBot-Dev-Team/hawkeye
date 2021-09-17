@@ -184,7 +184,7 @@ def postLeaves(data):
 def postMutes(data):
     print(data)
     timestamp = getTimeStamp()
-    embed = {"description": f"Logged <t:{timestamp}:R>","title": "Chat mute detected!", "fields" : [{"name" : "Muted User", "value" : f"{data}"}, {"name" : "Info", "value" : "These logs are not official information. To appeal a mute, join the PixelPlace discord."}], "color": 13036340} #yellow
+    embed = {"description": f"Logged <t:{timestamp}:R>","title": "Chat Mute detected!", "fields" : [{"name" : "Muted User", "value" : f"{data}"}, {"name" : "Info", "value" : "These logs are not official information. To appeal a mute, join the PixelPlace discord."}], "color": 13036340} #yellow
     whdata = {"content": "","username": "Chat Mutes","embeds": [embed],}
     postWebhook(webhook_mutes, whdata)      
 
