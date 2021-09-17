@@ -63,6 +63,7 @@ def logChat7(data):
     messageChannel = data["channel"]
     messageMention = data["mention"]
     if messageChannel == "global":
+        content = ""
         if messageMention == "":
             messageMention = "None"
             content = f"""
@@ -97,6 +98,7 @@ def logChat8(data):
     messageChannel = data["channel"]
     messageMention = data["mention"]
     if messageChannel == "painting":
+        content = ""
         if messageMention == "":
             messageMention = "None"
             content = f"""
