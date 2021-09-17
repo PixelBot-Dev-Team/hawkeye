@@ -179,7 +179,7 @@ def checkChatMessage(message,username):
             time.sleep(0.8)
             bot7.send_Chat("Please refrain from doing so in the future or your account will be muted.",f"{username}","whispers",f"{username}", 21)
             timestamp = getTimeStamp()
-            embed = {"description": f"Logged <t:{timestamp}:R>","title": "Bad word detected!", "fields" : [{"name" : "Username", "value" : f"{username}"}, {"name" : "Message", "value" : f"{message}"}], "color": 14662147} #yellow
+            embed = {"description": f"Logged <t:{timestamp}:R>","title": "Bad word detected!", "fields" : [{"name" : "Username", "value" : f"{username}"}, {"name" : "Message", "value" : f"{message}"}, {"name" : "Detected Word", "value" : f"{word}"}], "color": 14662147} #yellow
             whdata = {"content": "<@&835970992819273748>","username": "AutoMod","embeds": [embed],}
             postWebhook(webhook_mods, whdata)            
         file.close()
@@ -191,7 +191,7 @@ def checkChatMessage(message,username):
             time.sleep(0.8)
             bot7.send_Chat("Please refrain from doing so in the future or your account will be muted.",f"{username}","whispers",f"{username}", 21)
             timestamp = getTimeStamp()
-            embed = {"description": f"Logged <t:{timestamp}:R>","title": "Soft Alert - Bad word detected!", "fields" : [{"name" : "Username", "value" : f"{username}"}, {"name" : "Message", "value" : f"{message}"}], "color": 14662147} #yellow
+            embed = {"description": f"Logged <t:{timestamp}:R>","title": "Soft Alert - Bad word detected!", "fields" : [{"name" : "Username", "value" : f"{username}"}, {"name" : "Message", "value" : f"{message}"}, {"name" : "Detected Word", "value" : f"{word}"}], "color": 13036340} #yellow
             whdata = {"content": "","username": "AutoMod","embeds": [embed],}
             postWebhook(webhook_mods, whdata)            
         file.close()
