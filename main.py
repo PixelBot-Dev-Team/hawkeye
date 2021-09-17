@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import pathlib
 import sqlite3
 
-onlineDatabase = sqlite3.connect("online.db")
+
 
 webhook_onoff = "https://discord.com/api/webhooks/883775606540632075/hHrdNa-UHAaerqtoBWMdnenBsi0Tfd1-zsW78hPEIenvHNN1EA8IvEiNGvanko7zqiL_"
 webhook_mvp = "https://discord.com/api/webhooks/835654940008382464/RsN3Jjg8B6Ukv-8C09MfjktvyGrQztO4At2RIf27w4ZwmLpq_olf7kjr_YXPyAE8Cv43"
@@ -37,7 +37,8 @@ bot8Players = {}
 bot7 = pypxl.Bot("ppbt_logbot1", "8gD;Ky$EV+De6za5^", 7)
 bot7Players = {}
 
-onlineUsersHistory = [21, 43, 19, 83, 21] #test
+timeHistory = []
+onlineUsersHistory = [] #test
 
 def chat_Safety_Check(data):
     createdAt = data["createdAt"]
@@ -129,6 +130,8 @@ def postChatStats(data):
     whdata = {"content": f"Logged <t:{timestamp}:R>","username": "Stats","embeds": [embed],}
     postWebhook(webhook_stats, whdata)
     postPlayersRequests()
+    SaveOnlineData(canvas7Stat)
+    
 
 @background
 def postPlayersRequests():
@@ -148,9 +151,30 @@ def handlePaintingPlayers8(data):
 
 #chat.stats - Charts 
 
-def WriteStatstoSQL(onlineCountTotal, onlineCount7, onlineCount8):
-    print("todo")
+def SaveOnlineData(onlineCountTotal):
+    time = datetime.datetime.now()
+    timeHistory.append(time)
+    onlineUsersHistory.append(onlineCountTotal)
 
+# def CreateSQLTable():
+#     sqlcommand = """CREATE TABLE OnlineLog (
+# 	Time INTEGER,
+# 	TotalUserCount INTEGER
+#     );"""
+#     onlineDatabase = sqlite3.connect("online.db")
+#     cursor = onlineDatabase.cursor()
+#     cursor.execute(sqlcommand)
+#     onlineDatabase.commit()
+
+# def WriteStatstoSQL(time, onlineCountTotal):
+#     sqlcommand = f"""INSERT INTO OnlineLog
+#     (Time, TotalUserCount)
+#     VALUES('{time}', {onlineCountTotal});"""
+
+#     onlineDatabase = sqlite3.connect("online.db")
+#     cursor = onlineDatabase.cursor()
+#     cursor.execute(sqlcommand)
+#     onlineDatabase.commit()
 
 @bot7.socketconnection.on("j")
 @background
@@ -239,7 +263,6 @@ def postWebhook(url, data):
         print(f"Not sent with {result.status_code}, response:\n{result.json()}")
 
 if __name__ == "__main__":
-    createChart()
     while True:
         time.sleep(99999)
 
