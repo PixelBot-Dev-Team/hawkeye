@@ -157,7 +157,7 @@ def createChart():
     plt.plot(timeHistory, onlineUsersHistory)
     plt.gcf().autofmt_xdate()
 
-    plt.savefig("chart.png")
+    plt.savefig("chart.png") 
     
 def SaveOnlineData(onlineCountTotal):
     timeHistory.append(datetime.datetime.now())
@@ -248,8 +248,10 @@ def postWebhook(url, data):
         print(f"Not sent with {result.status_code}, response:\n{result.json()}")
 
 if __name__ == "__main__":
+    time.sleep(45)
+    createChart()
     while True:
-        time.sleep(30)
+        time.sleep(1800)
         createChart()
 
 #TODO
