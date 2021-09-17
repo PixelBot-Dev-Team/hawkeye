@@ -15,6 +15,7 @@ webhook_mvp = "https://discord.com/api/webhooks/835654940008382464/RsN3Jjg8B6Ukv
 webhook_global = "https://discord.com/api/webhooks/835654823784874015/yXIkpU5K7mjAcJc3bBorIkaApkH5cw5Sc-_rdoKrJo-Jfxfmuyabk7C1MYtU8Nmtegit"
 webhook_stats = "https://discord.com/api/webhooks/883773760447066112/qzeDM4A882s1DmvM7OXyswue_fQCnZL-F2xDu-iIyk5mB7CAN7ZmjJj1Gspz-ThQ5ezS"
 webhook_mods = "https://discord.com/api/webhooks/883807042656157828/053ufcOenaZo0dZHqBhz1Fd47SAt4qQ5_Wd3ZIMPo_RRcIGbBqguw1zjULrsS2QCMyJ0"
+webhook_mutes = "https://discord.com/api/webhooks/888503958904119356/t-v4e44YADLH7x5mF68XSj0nYKcV07dDRGFQ7z6fmkPTQnqBZ6bIAlfoECU_1Z7sjkOc"
 
 start_time = datetime.datetime.utcnow()
 
@@ -167,6 +168,24 @@ def postLeaves(data):
     embed = {"description": f"{content}","title": "Leaves", "color": 13571349} #red
     whdata = {"content": f"Logged <t:{timestamp}:R>","username": "Leaves","embeds": [embed],}
     postWebhook(webhook_onoff, whdata)
+
+@bot7.socketconnection.on("chat.system.delete")
+@background
+def postMutes(data):
+    print(data)
+    timestamp = getTimeStamp()
+    embed = {"description": f"Logged <t:{timestamp}:R>","title": "Chat mute detected! (/7)", "fields" : [{"name" : "Muted user", "value" : f"{data}"}, {"name" : "Info", "value" : "We can only detect chat mutes that happened in /7 or /8 chat."}], "color": 13036340} #yellow
+    whdata = {"content": "","username": "Chat Mutes","embeds": [embed],}
+    postWebhook(webhook_mutes, whdata)
+
+@bot8.socketconnection.on("chat.system.delete")
+@background
+def postMutes(data):
+    print(data)
+    timestamp = getTimeStamp()
+    embed = {"description": f"Logged <t:{timestamp}:R>","title": "Chat mute detected! (/8)", "fields" : [{"name" : "Muted user", "value" : f"{data}"}, {"name" : "Info", "value" : "We can only detect chat mutes that happened in /7 or /8 chat."}], "color": 13036340} #yellow
+    whdata = {"content": "","username": "Chat Mutes","embeds": [embed],}
+    postWebhook(webhook_mutes, whdata)              
 
 #check at a later point https://forms.gle/Ti9BoJEmDvzVGnwq7
 def checkChatMessage(message,username):
