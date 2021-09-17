@@ -8,8 +8,6 @@ import matplotlib.pyplot as plt
 import pathlib
 import sqlite3
 
-
-
 webhook_onoff = "https://discord.com/api/webhooks/883775606540632075/hHrdNa-UHAaerqtoBWMdnenBsi0Tfd1-zsW78hPEIenvHNN1EA8IvEiNGvanko7zqiL_"
 webhook_mvp = "https://discord.com/api/webhooks/835654940008382464/RsN3Jjg8B6Ukv-8C09MfjktvyGrQztO4At2RIf27w4ZwmLpq_olf7kjr_YXPyAE8Cv43"
 webhook_global = "https://discord.com/api/webhooks/835654823784874015/yXIkpU5K7mjAcJc3bBorIkaApkH5cw5Sc-_rdoKrJo-Jfxfmuyabk7C1MYtU8Nmtegit"
@@ -151,30 +149,20 @@ def handlePaintingPlayers8(data):
 
 #chat.stats - Charts 
 
+
+def createChart():
+    plt.title("PixelPlace Online Users (24h)")
+    plt.suptitle("HawkEye")
+    
+    plt.plot(timeHistory, onlineUsersHistory)
+    plt.gcf().autofmt_xdate()
+
+    plt.savefig("chart.png")
+    
 def SaveOnlineData(onlineCountTotal):
-    time = datetime.datetime.now()
-    timeHistory.append(time)
+    timeHistory.append(datetime.datetime.now())
     onlineUsersHistory.append(onlineCountTotal)
 
-# def CreateSQLTable():
-#     sqlcommand = """CREATE TABLE OnlineLog (
-# 	Time INTEGER,
-# 	TotalUserCount INTEGER
-#     );"""
-#     onlineDatabase = sqlite3.connect("online.db")
-#     cursor = onlineDatabase.cursor()
-#     cursor.execute(sqlcommand)
-#     onlineDatabase.commit()
-
-# def WriteStatstoSQL(time, onlineCountTotal):
-#     sqlcommand = f"""INSERT INTO OnlineLog
-#     (Time, TotalUserCount)
-#     VALUES('{time}', {onlineCountTotal});"""
-
-#     onlineDatabase = sqlite3.connect("online.db")
-#     cursor = onlineDatabase.cursor()
-#     cursor.execute(sqlcommand)
-#     onlineDatabase.commit()
 
 @bot7.socketconnection.on("j")
 @background
@@ -251,9 +239,6 @@ def getTimeStamp():
 	epoch = str(time.time()).split(".")[0]
 	return epoch
 
-def createChart(history):
-    plt.plot(history)
-    plt.show()
 
 def postWebhook(url, data):
     result = requests.post(url, json=data)
@@ -264,7 +249,8 @@ def postWebhook(url, data):
 
 if __name__ == "__main__":
     while True:
-        time.sleep(99999)
+        time.sleep(30)
+        createChart()
 
 #TODO
 #Add check if data is same for leave/join
