@@ -183,6 +183,18 @@ def checkChatMessage(message,username):
             whdata = {"content": "<@&835970992819273748>","username": "AutoMod","embeds": [embed],}
             postWebhook(webhook_mods, whdata)            
         file.close()
+    file1 = open(f"{CurrentDir}/softfilter.txt",'r')
+    slurlist1 = file1.read().splitlines()
+    for word in spltmessage:
+        if word.lower() in slurlist1:
+            bot7.send_Chat("You have sent a message in chat which might be against PixelPlace Terms of Service.",f"{username}","whispers",f"{username}", 21)
+            time.sleep(0.8)
+            bot7.send_Chat("Please refrain from doing so in the future or your account will be muted.",f"{username}","whispers",f"{username}", 21)
+            timestamp = getTimeStamp()
+            embed = {"description": f"Logged <t:{timestamp}:R>","title": "Soft Alert - Bad word detected!", "fields" : [{"name" : "Username", "value" : f"{username}"}, {"name" : "Message", "value" : f"{message}"}], "color": 14662147} #yellow
+            whdata = {"content": "","username": "AutoMod","embeds": [embed],}
+            postWebhook(webhook_mods, whdata)            
+        file.close()
     file = open(f"{CurrentDir}/banned.txt",'r')
     banned = file.read().splitlines()
     if username.lower() in str(banned):
