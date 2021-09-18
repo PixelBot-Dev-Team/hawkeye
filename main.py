@@ -89,6 +89,7 @@ def logChat7(data):
             Mentioned People:{messageMention}
             """
         timestamp = getTimeStamp()
+        #TODO @Almos, This just returns a string with the emotes in the right format. imagine it as a secondary message but its all emotes. Same for /8 logging
         iconstring = getIcons(messageIcons)
         content2 = f"Logged <t:{timestamp}:R>"
         timestamp = getTimeStamp()
@@ -287,3 +288,4 @@ if __name__ == "__main__":
 #Add check if data is same for leave/join
 #use sql lite thing
 #pray icons work
+#Implement Icons in embed
