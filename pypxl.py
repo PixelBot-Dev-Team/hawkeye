@@ -149,3 +149,8 @@ class Bot():
     def AttemptSocketAuth(self):
         self.socketconnection.connect("https://pixelplace.io/socket.io/", transports='websocket', namespaces=["/",])
         self.socketconnection.emit(event='init', data={"authKey":self.authKey,"authToken":self.authToken,"authId":self.authId,"boardId":self.canvas})
+
+    def DisconnectFromSocket(self):
+         self.socketconnection.disconnect()
+         self.AttemptSocketAuth()
+

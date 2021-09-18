@@ -15,6 +15,7 @@ webhook_stats = "https://discord.com/api/webhooks/883773760447066112/qzeDM4A882s
 webhook_mods = "https://discord.com/api/webhooks/883807042656157828/053ufcOenaZo0dZHqBhz1Fd47SAt4qQ5_Wd3ZIMPo_RRcIGbBqguw1zjULrsS2QCMyJ0"
 webhook_mutes = "https://discord.com/api/webhooks/888503958904119356/t-v4e44YADLH7x5mF68XSj0nYKcV07dDRGFQ7z6fmkPTQnqBZ6bIAlfoECU_1Z7sjkOc"
 
+global start_time
 start_time = datetime.datetime.utcnow()
 
 CurrentDir = pathlib.Path(__file__).parent.absolute()
@@ -49,6 +50,7 @@ def chat_Safety_Check(data):
 @bot7.socketconnection.on("chat.user.message")
 @background
 def logChat7(data):
+    print(data)
     if chat_Safety_Check(data) == True: 
         pass 
     else: 
@@ -61,6 +63,14 @@ def logChat7(data):
     messageIcons = data["icons"]
     messageChannel = data["channel"]
     messageMention = data["mention"]
+    if message == "!restart":
+        print("restart")
+        if messageUsername == "AlmosYT" or messageUsername == "SoManyNames":
+            print("restart")
+            global start_time
+            start_time = datetime.datetime.utcnow()
+            bot7.DisconnectFromSocket()
+            bot8.DisconnectFromSocket()
     if messageChannel == "global":
         content = ""
         if messageMention == "":
@@ -127,7 +137,7 @@ def postChatStats(data):
     embed = {"description": f"{content}","title": "Stats", "color": 16776958} #white
     whdata = {"content": f"Logged <t:{timestamp}:R>","username": "Stats","embeds": [embed],}
     postWebhook(webhook_stats, whdata)
-    postPlayersRequests()
+    #postPlayersRequests()
     SaveOnlineData(canvas7Stat)
     
 
@@ -149,7 +159,7 @@ def handlePaintingPlayers8(data):
 
 #chat.stats - Charts 
 
-
+@background
 def createChart():
     plt.title("PixelPlace Online Users (24h)")
     plt.suptitle("HawkEye")
@@ -158,7 +168,8 @@ def createChart():
     plt.gcf().autofmt_xdate()
 
     plt.savefig("chart.png") 
-    
+
+@background
 def SaveOnlineData(onlineCountTotal):
     timeHistory.append(datetime.datetime.now())
     onlineUsersHistory.append(onlineCountTotal)
