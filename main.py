@@ -94,7 +94,7 @@ def logChat7(data):
         content2 = f"Logged <t:{timestamp}:R>"
         timestamp = getTimeStamp()
         embed = {"description": f"{content}","title": "/7 Chat Message"}
-        whdata = {"content": f"{content2}","username": f"{messageUsername} - {messageGuild}","embeds": [embed],}
+        whdata = {"content": f"{content2}","username": f"{messageUsername}{iconstring} - {messageGuild}","embeds": [embed],}
         postWebhook(webhook_global, whdata)
         checkChatMessage(message, messageUsername)
 
@@ -127,10 +127,10 @@ def logChat8(data):
             Mentioned People:{messageMention}
             """
         timestamp = getTimeStamp()
-        iconsstr = getIcons(icons)
+        iconstring = getIcons(messageIcons)
         content2 = f"Logged <t:{timestamp}:R>"
         embed = {"description": f"{content}","title": "/8 Chat Message"}
-        whdata = {"content": f"{content2}","username": f"{messageUsername} - {messageGuild}","embeds": [embed],}
+        whdata = {"content": f"{content2}","username": f"{messageUsername}{iconstring} - {messageGuild}","embeds": [embed],}
         postWebhook(webhook_mvp, whdata)
         checkChatMessage(message, messageUsername)
 
