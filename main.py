@@ -65,7 +65,7 @@ def logChat7(data):
     if message == "":
         message = "/here"
     messageIcons = data["icons"]
-    messageIcons = messageIcons.replace("'",'"')
+
     messageChannel = data["channel"]
     messageMention = data["mention"]
     if message == "!restart":
@@ -93,8 +93,8 @@ def logChat7(data):
         iconstring = getIcons(messageIcons)
         content2 = f"Logged <t:{timestamp}:R>"
         timestamp = getTimeStamp()
-        embed = {"description": f"{content}","title": "/7 Chat Message"}
-        whdata = {"content": f"{content2}","username": f"{messageUsername}{iconstring} - {messageGuild}","embeds": [embed],}
+        embed = {"description": f"{content}","title": f"{messageUsername} {iconstring} - {messageGuild}"}
+        whdata = {"content": f"{content2}","username": f"/7 Chat Message","embeds": [embed],}
         postWebhook(webhook_global, whdata)
         checkChatMessage(message, messageUsername)
 
@@ -111,7 +111,7 @@ def logChat8(data):
     if message == "":
         message = "/here"
     messageIcons = data["icons"]
-    messageIcons = messageIcons.replace("'",'"')
+    
     messageChannel = data["channel"]
     messageMention = data["mention"]
     if messageChannel == "painting":
@@ -129,8 +129,8 @@ def logChat8(data):
         timestamp = getTimeStamp()
         iconstring = getIcons(messageIcons)
         content2 = f"Logged <t:{timestamp}:R>"
-        embed = {"description": f"{content}","title": "/8 Chat Message"}
-        whdata = {"content": f"{content2}","username": f"{messageUsername}{iconstring} - {messageGuild}","embeds": [embed],}
+        embed = {"description": f"{content}","title": f"{messageUsername}{iconstring} - {messageGuild}"}
+        whdata = {"content": f"{content2}","username": f"/8 Chat Message","embeds": [embed],}
         postWebhook(webhook_mvp, whdata)
         checkChatMessage(message, messageUsername)
 
