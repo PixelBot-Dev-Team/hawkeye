@@ -86,10 +86,9 @@ def logChat7(data):
         else:
             content = f"""
             {message}
-            Mentioned People:{messageMention}
+Mentioned People:{messageMention}
             """
         timestamp = getTimeStamp()
-        #TODO @Almos, This just returns a string with the emotes in the right format. imagine it as a secondary message but its all emotes. Same for /8 logging
         iconstring = getIcons(messageIcons)
         content2 = f"Logged <t:{timestamp}:R>"
         timestamp = getTimeStamp()
@@ -124,12 +123,12 @@ def logChat8(data):
         else:
             content = f"""
             {message}
-            Mentioned People:{messageMention}
+Mentioned People:{messageMention}
             """
         timestamp = getTimeStamp()
         iconstring = getIcons(messageIcons)
         content2 = f"Logged <t:{timestamp}:R>"
-        embed = {"description": f"{content}","title": f"{messageUsername}{iconstring} - {messageGuild}"}
+        embed = {"description": f"{content}","title": f"{iconstring}{messageUsername} - {messageGuild}"}
         whdata = {"content": f"{content2}","username": f"/8 Chat Message","embeds": [embed],}
         postWebhook(webhook_mvp, whdata)
         checkChatMessage(message, messageUsername)
@@ -141,7 +140,7 @@ def postChatStats(data):
     totalStat = data[1]
     content = f"""
     Players on Canvas 7>{canvas7Stat}
-    Players in total>{totalStat}"""
+Players in total   >{totalStat}"""
     timestamp = getTimeStamp()
     embed = {"description": f"{content}","title": "Stats", "color": 16776958} #white
     whdata = {"content": f"Logged <t:{timestamp}:R>","username": "Stats","embeds": [embed],}
@@ -283,9 +282,3 @@ if __name__ == "__main__":
     while True:
         time.sleep(1800)
         createChart()
-
-#TODO
-#Add check if data is same for leave/join
-#use sql lite thing
-#pray icons work
-#Implement Icons in embed
