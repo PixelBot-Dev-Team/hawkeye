@@ -95,7 +95,7 @@ Mentioned People:{messageMention}
         embed = {"description": f"{content}","title": f"{messageUsername} {iconstring} - {messageGuild}"}
         whdata = {"content": f"{content2}","username": f"/7 Chat Message","embeds": [embed],}
         postWebhook(webhook_global, whdata)
-        checkChatMessage(message, messageUsername)
+        checkChatMessage(message, messageUsername,7)
 
 @bot8.socketconnection.on("chat.user.message")
 @background
@@ -131,7 +131,7 @@ Mentioned People:{messageMention}
         embed = {"description": f"{content}","title": f"{iconstring}{messageUsername} - {messageGuild}"}
         whdata = {"content": f"{content2}","username": f"/8 Chat Message","embeds": [embed],}
         postWebhook(webhook_mvp, whdata)
-        checkChatMessage(message, messageUsername)
+        checkChatMessage(message, messageUsername,8)
 
 @bot7.socketconnection.on("chat.stats")
 @background
@@ -220,7 +220,7 @@ def postMutes(data):
     postWebhook(webhook_mutes, whdata)      
 
 #To collect slurs: https://forms.gle/Ti9BoJEmDvzVGnwq7
-def checkChatMessage(message,username):
+def checkChatMessage(message,username,canvas):
     spltmessage = message.split()
     file = open(f"{CurrentDir}/filter.txt",'r')
     slurlist = file.read().splitlines()
@@ -230,7 +230,7 @@ def checkChatMessage(message,username):
             time.sleep(0.8)
             bot7.send_Chat("Please refrain from doing so in the future or your account will be muted.",f"{username}","whispers",f"{username}", 21)
             timestamp = getTimeStamp()
-            embed = {"description": f"Logged <t:{timestamp}:R>","title": "Bad word detected!", "fields" : [{"name" : "Username", "value" : f"{username}"}, {"name" : "Message", "value" : f"{message}"}, {"name" : "Detected Word", "value" : f"{word}"}], "color": 14662147} #yellow
+            embed = {"description": f"Logged <t:{timestamp}:R>","title": "Bad word detected!", "fields" : [{"name" : "Username", "value" : f"{username}"}, {"name" : "Canvas", "value" : f"{canvas}"}, {"name" : "Message", "value" : f"{message}"}, {"name" : "Detected Word", "value" : f"{word}"}], "color": 14662147} #yellow
             whdata = {"content": "<@&835970992819273748>","username": "AutoMod","embeds": [embed],}
             postWebhook(webhook_mods, whdata)            
         file.close()
@@ -242,7 +242,7 @@ def checkChatMessage(message,username):
             time.sleep(0.8)
             bot7.send_Chat("Please refrain from doing so in the future or your account will be muted.",f"{username}","whispers",f"{username}", 21)
             timestamp = getTimeStamp()
-            embed = {"description": f"Logged <t:{timestamp}:R>","title": "Soft Alert - Bad word detected!", "fields" : [{"name" : "Username", "value" : f"{username}"}, {"name" : "Message", "value" : f"{message}"}, {"name" : "Detected Word", "value" : f"{word}"}], "color": 13036340} #yellow
+            embed = {"description": f"Logged <t:{timestamp}:R>","title": "Soft Alert - Bad word detected!", "fields" : [{"name" : "Username", "value" : f"{username}"}, {"name" : "Message", "value" : f"{message}"}, {"name" : "Canvas", "value" : f"{canvas}"}, {"name" : "Detected Word", "value" : f"{word}"}], "color": 13036340} #yellow
             whdata = {"content": "","username": "AutoMod","embeds": [embed],}
             postWebhook(webhook_mods, whdata)            
         file.close()
