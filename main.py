@@ -195,7 +195,7 @@ def postJoins(data):
         file = open(f"{CurrentDir}/banned.txt",'r')
         bannedlist = file.read().splitlines()
         for name in bannedlist:
-            if str(name) in data.lower():
+            if str(name) in data.lower() and data.lower() != "sarpiliiiiii":
                 timestamp = getTimeStamp()
                 embed = {"description": f"Logged <t:{timestamp}:R>","title": "Permabanned User Detected!", "fields" : [{"name" : "Username", "value" : f"{data}"}], "color": 13571349} #red
                 whdata = {"content": "<@&835970992819273748>","username": "AutoMod","embeds": [embed],}
