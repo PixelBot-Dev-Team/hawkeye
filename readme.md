@@ -10,7 +10,7 @@ PixelBot is a team of developers and testers creating bots for **PixelPlace**. W
 |--|--| --| 
 | DisasterBot | Simon | An interesting bot with many features including disasters, flood fill, chat features and more| 
 | Printer | Duchesskero | A socket.io bot made in python| 
-| PixelPlaceTT | Duchesskero, Simon, AlmosYT | Tic Tac Toe in PixelPlace!| 
+| PixelPlaceTTT | Duchesskero, Simon, AlmosYT | Tic Tac Toe in PixelPlace!| 
 | HawkEye | Simon & AlmosYT | An advanced logging system for PixelPlace.io|
 | PyPixel | Duchesskero | Communicating with PixelPlace using socket.io| 
 
