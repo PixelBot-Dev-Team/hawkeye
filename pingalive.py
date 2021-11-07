@@ -111,7 +111,7 @@ def playerAlikeFill(x,y,color):
 	for x,y in pixel_list:
 		bot8.place_Pixel(x,y,color)
 		#sleeptime = random.uniform(0.016, 0.026)
-		time.sleep(0.008)
+		time.sleep(0.016)
 	print(f"Done Filling")
 
 def getPixel7(x,y):
