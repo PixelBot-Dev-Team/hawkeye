@@ -86,17 +86,16 @@ def logChat7(data):
         else:
             content = f"""
             {message}
-            Mentioned People:{messageMention}
+Mentioned People:{messageMention}
             """
         timestamp = getTimeStamp()
-        #TODO @Almos, This just returns a string with the emotes in the right format. imagine it as a secondary message but its all emotes. Same for /8 logging
         iconstring = getIcons(messageIcons)
         content2 = f"Logged <t:{timestamp}:R>"
         timestamp = getTimeStamp()
         embed = {"description": f"{content}","title": f"{messageUsername} {iconstring} - {messageGuild}"}
         whdata = {"content": f"{content2}","username": f"/7 Chat Message","embeds": [embed],}
         postWebhook(webhook_global, whdata)
-        checkChatMessage(message, messageUsername)
+        checkChatMessage(message, messageUsername,7)
 
 @bot8.socketconnection.on("chat.user.message")
 @background
@@ -124,15 +123,15 @@ def logChat8(data):
         else:
             content = f"""
             {message}
-            Mentioned People:{messageMention}
+Mentioned People:{messageMention}
             """
         timestamp = getTimeStamp()
         iconstring = getIcons(messageIcons)
         content2 = f"Logged <t:{timestamp}:R>"
-        embed = {"description": f"{content}","title": f"{messageUsername}{iconstring} - {messageGuild}"}
+        embed = {"description": f"{content}","title": f"{iconstring}{messageUsername} - {messageGuild}"}
         whdata = {"content": f"{content2}","username": f"/8 Chat Message","embeds": [embed],}
         postWebhook(webhook_mvp, whdata)
-        checkChatMessage(message, messageUsername)
+        checkChatMessage(message, messageUsername,8)
 
 @bot7.socketconnection.on("chat.stats")
 @background
@@ -141,7 +140,7 @@ def postChatStats(data):
     totalStat = data[1]
     content = f"""
     Players on Canvas 7>{canvas7Stat}
-    Players in total>{totalStat}"""
+Players in total   >{totalStat}"""
     timestamp = getTimeStamp()
     embed = {"description": f"{content}","title": "Stats", "color": 16776958} #white
     whdata = {"content": f"Logged <t:{timestamp}:R>","username": "Stats","embeds": [embed],}
@@ -196,7 +195,7 @@ def postJoins(data):
         file = open(f"{CurrentDir}/banned.txt",'r')
         bannedlist = file.read().splitlines()
         for name in bannedlist:
-            if str(name) in data.lower():
+            if str(name) in data.lower() and data.lower() != "sarpiliiiiii":
                 timestamp = getTimeStamp()
                 embed = {"description": f"Logged <t:{timestamp}:R>","title": "Permabanned User Detected!", "fields" : [{"name" : "Username", "value" : f"{data}"}], "color": 13571349} #red
                 whdata = {"content": "<@&835970992819273748>","username": "AutoMod","embeds": [embed],}
@@ -221,7 +220,7 @@ def postMutes(data):
     postWebhook(webhook_mutes, whdata)      
 
 #To collect slurs: https://forms.gle/Ti9BoJEmDvzVGnwq7
-def checkChatMessage(message,username):
+def checkChatMessage(message,username,canvas):
     spltmessage = message.split()
     file = open(f"{CurrentDir}/filter.txt",'r')
     slurlist = file.read().splitlines()
@@ -231,7 +230,7 @@ def checkChatMessage(message,username):
             time.sleep(0.8)
             bot7.send_Chat("Please refrain from doing so in the future or your account will be muted.",f"{username}","whispers",f"{username}", 21)
             timestamp = getTimeStamp()
-            embed = {"description": f"Logged <t:{timestamp}:R>","title": "Bad word detected!", "fields" : [{"name" : "Username", "value" : f"{username}"}, {"name" : "Message", "value" : f"{message}"}, {"name" : "Detected Word", "value" : f"{word}"}], "color": 14662147} #yellow
+            embed = {"description": f"Logged <t:{timestamp}:R>","title": "Bad word detected!", "fields" : [{"name" : "Username", "value" : f"{username}"}, {"name" : "Canvas", "value" : f"{canvas}"}, {"name" : "Message", "value" : f"{message}"}, {"name" : "Detected Word", "value" : f"{word}"}], "color": 14662147} #yellow
             whdata = {"content": "<@&835970992819273748>","username": "AutoMod","embeds": [embed],}
             postWebhook(webhook_mods, whdata)            
         file.close()
@@ -243,7 +242,7 @@ def checkChatMessage(message,username):
             time.sleep(0.8)
             bot7.send_Chat("Please refrain from doing so in the future or your account will be muted.",f"{username}","whispers",f"{username}", 21)
             timestamp = getTimeStamp()
-            embed = {"description": f"Logged <t:{timestamp}:R>","title": "Soft Alert - Bad word detected!", "fields" : [{"name" : "Username", "value" : f"{username}"}, {"name" : "Message", "value" : f"{message}"}, {"name" : "Detected Word", "value" : f"{word}"}], "color": 13036340} #yellow
+            embed = {"description": f"Logged <t:{timestamp}:R>","title": "Soft Alert - Bad word detected!", "fields" : [{"name" : "Username", "value" : f"{username}"}, {"name" : "Message", "value" : f"{message}"}, {"name" : "Canvas", "value" : f"{canvas}"}, {"name" : "Detected Word", "value" : f"{word}"}], "color": 13036340} #yellow
             whdata = {"content": "","username": "AutoMod","embeds": [embed],}
             postWebhook(webhook_mods, whdata)            
         file.close()
@@ -283,9 +282,3 @@ if __name__ == "__main__":
     while True:
         time.sleep(1800)
         createChart()
-
-#TODO
-#Add check if data is same for leave/join
-#use sql lite thing
-#pray icons work
-#Implement Icons in embed
