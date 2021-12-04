@@ -144,12 +144,6 @@ class Bot():
         redditconfirmconnection.click()
         
         authinfo = self.get_auth(self.driver.get_cookies())
-        command = "window.pingalive=function(){function _(x){for(var b=[],a=_0x53b6(\"0x363\")+_0x53b6(\"0xac3\")+\"JKLEZCFXTA\",_=a.length,n=0;n<x;n++)b[_0x53b6(\"0x160\")](a[_0x53b6(\"0x9ac\")](Math[_0x53b6(\"0xe83\")](Math[_0x53b6(\"0x5ba\")]()*_)));return b[_0x53b6(\"0x7\")](\"\")}var x={0:\"g\",1:\"m\",2:\"b\",3:\"o\",4:\"z\",5:\"c\",6:\"f\",7:\"x\",8:\"t\",9:\"a\"},n=x;function t(x){for(var b=[],a=_0x53b6(\"0x270\")+_0x53b6(\"0x32a\")+_0x53b6(\"0xa1b\")+\"EFGHIJKLMN\"+_0x53b6(\"0x3f4\")+\"YZ\",_=a[_0x53b6(\"0x3a0\")],n=0;n<x;n++)b.push(a[_0x53b6(\"0x9ac\")](Math[_0x53b6(\"0xe83\")](Math.random()*_)));return b[_0x53b6(\"0x7\")](\"\")}return function(){var x,b=(parseInt((new Date)[_0x53b6(\"0x845\")]()/1e3)+\"\")[_0x53b6(\"0xeb1\")](\"\"),a=\"\";for(x in b)0==x&&(a+=t(5)),1==x&&(a+=t(7)),2==x&&(a+=_(3)),3==x&&(a+=t(8)),4==x&&(a+=_(6)),5==x&&(a+=t(3)),6==x&&(a+=t(6)),7==x&&(a+=_(4)),8==x&&(a+=t(7)),9==x&&(a+=t(6)),0===Math[_0x53b6(\"0xe83\")](2*Math[_0x53b6(\"0x5ba\")]())?_0x53b6(\"0x63c\")===_0x53b6(\"0x63c\")&&(a+=n[parseInt(b[x])][_0x53b6(\"0x721\")+\"e\"]()):a+=n[parseInt(b[x])];return a+=\"=\"}()};"
-        
-        self.driver.execute_script(command)
-        pingalive = self.driver.execute_script("return pingalive()")
-
-        print(pingalive)
         
         return authinfo
 

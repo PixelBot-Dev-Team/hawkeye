@@ -32,7 +32,7 @@ def background(f):
 @background
 @bot8.socketconnection.on("ping.alive")
 def pongalive():
-    command = "window.pingalive=function(){function _(x){for(var b=[],a=_0x53b6(\"0x363\")+_0x53b6(\"0xac3\")+\"JKLEZCFXTA\",_=a.length,n=0;n<x;n++)b[_0x53b6(\"0x160\")](a[_0x53b6(\"0x9ac\")](Math[_0x53b6(\"0xe83\")](Math[_0x53b6(\"0x5ba\")]()*_)));return b[_0x53b6(\"0x7\")](\"\")}var x={0:\"g\",1:\"m\",2:\"b\",3:\"o\",4:\"z\",5:\"c\",6:\"f\",7:\"x\",8:\"t\",9:\"a\"},n=x;function t(x){for(var b=[],a=_0x53b6(\"0x270\")+_0x53b6(\"0x32a\")+_0x53b6(\"0xa1b\")+\"EFGHIJKLMN\"+_0x53b6(\"0x3f4\")+\"YZ\",_=a[_0x53b6(\"0x3a0\")],n=0;n<x;n++)b.push(a[_0x53b6(\"0x9ac\")](Math[_0x53b6(\"0xe83\")](Math.random()*_)));return b[_0x53b6(\"0x7\")](\"\")}return function(){var x,b=(parseInt((new Date)[_0x53b6(\"0x845\")]()/1e3)+\"\")[_0x53b6(\"0xeb1\")](\"\"),a=\"\";for(x in b)0==x&&(a+=t(5)),1==x&&(a+=t(7)),2==x&&(a+=_(3)),3==x&&(a+=t(8)),4==x&&(a+=_(6)),5==x&&(a+=t(3)),6==x&&(a+=t(6)),7==x&&(a+=_(4)),8==x&&(a+=t(7)),9==x&&(a+=t(6)),0===Math[_0x53b6(\"0xe83\")](2*Math[_0x53b6(\"0x5ba\")]())?_0x53b6(\"0x63c\")===_0x53b6(\"0x63c\")&&(a+=n[parseInt(b[x])][_0x53b6(\"0x721\")+\"e\"]()):a+=n[parseInt(b[x])];return a+=\"=\"}()};"
+    command = "window.pingalive=function(){function x(x){for(var r=[],a=_0x4259(\"0x3a4\")+_0x4259(\"0x78d\")+_0x4259(\"0xcac\"),n=a[_0x4259(\"0x762\")],t=0;t<x;t++)r.push(a[_0x4259(\"0xcb7\")](Math[_0x4259(\"0x3be\")](Math.random()*n)));return r.join(\"\")}var r={0:\"g\",1:\"m\",2:\"b\",3:\"o\",4:\"z\",5:\"c\",6:\"f\",7:\"x\",8:\"t\",9:\"a\"},a=r;function n(x){for(var r=[],a=\"abcdefghij\"+_0x4259(\"0xe54\")+_0x4259(\"0x943\")+_0x4259(\"0x7cd\")+\"OPQRSTUVWXYZ\",n=a[_0x4259(\"0x762\")],t=0;t<x;t++)r[_0x4259(\"0x645\")](a.charAt(Math[_0x4259(\"0x3be\")](Math.random()*n)));return r[_0x4259(\"0x280\")](\"\")}return function(){var r=(parseInt(Math.floor(Date.now()/1e3))+1678+\"\")[_0x4259(\"0x8f8\")](\"\"),t=\"\";for(var e in r)0==e&&(t+=n(5)),1==e&&(t+=n(7)),2==e&&(t+=x(3)),3==e&&(t+=n(8)),4==e&&(t+=x(6)),5==e&&(t+=n(3)),6==e&&(t+=n(6)),7==e&&(t+=x(4)),8==e&&(t+=n(7)),9==e&&(t+=n(6)),0===Math.floor(2*Math.random())?t+=a[parseInt(r[e])][_0x4259(\"0xa4e\")+\"e\"]():t+=a[parseInt(r[e])];return t+=\"0=\",result=t,result}()};"
     bot8.driver.execute_script(command)
     pingalive = bot8.driver.execute_script("return pingalive()")
 
@@ -70,7 +70,26 @@ def logChat7(data):
     prefix = MessageDic[0]
     print(prefix)
 
-    if prefix == "!fill":
+    if prefix == "!dot":
+        if messageUsername == "SoManyNames" or messageUsername == "AlmosYT":
+            if len(MessageDic) == 4:
+                try:
+                    x = int(MessageDic[1])
+                    y = int(MessageDic[2])
+                    color = int(MessageDic[3])
+                except:
+                    bot8.send_Chat(f"One of the Arguments is not a Number!",f"{messageUsername}","whispers",f"{target}",29)
+                else:
+                    bot8.send_Chat(f"Trying to start a Dotting at X:{x},Y:{y}!:",f"{messageUsername}","whispers",f"{target}",29)
+                    newThread = threading.Thread(target=dotFill,args=(x,y,color))
+                    newThread.start()
+            else:
+                bot8.send_Chat("Missing or too many Arguments! Syntax is '$dot x y color'!",f"{messageUsername}","whispers",f"{target}",29)
+        else:
+            bot8.send_Chat("This Command is currently only avaiable to Simon and Almos!",f"{messageUsername}",f"{messageChannel}",f"{target}",29)
+
+
+    elif prefix == "!fill":
         if messageUsername == "SoManyNames" or messageUsername == "AlmosYT":
             if len(MessageDic) == 4:
                 try:
@@ -113,6 +132,35 @@ def playerAlikeFill(x,y,color):
 		#sleeptime = random.uniform(0.016, 0.026)
 		time.sleep(0.016)
 	print(f"Done Filling")
+
+def dotFill(x,y,color):
+    stack = []
+    trash = []
+    pixel_list = []
+    stack.append([x, y])
+    while len(stack) != 0:
+        x,y = stack.pop()
+        pixel_list.append([x,y])
+        if getPixel7(x, y) != (204, 204, 204, 255):
+            #debugMessage(f"Adding to Stack: {x},{y}!")
+            trash.append([x,y])
+            if [x,y + 1] not in stack and [x,y + 1] not in trash:
+                stack.append([x,y + 1])
+            if [x,y - 1] not in stack and [x,y - 1] not in trash:
+                stack.append([x,y - 1])
+            if [x + 1,y] not in stack and [x + 1,y] not in trash:
+                stack.append([x + 1,y])
+            if [x - 1,y] not in stack and [x - 1,y] not in trash:
+                stack.append([x - 1,y])
+        else:
+            print(f"Skipping {x},{y}!")
+    while len(pixel_list) > 0:
+        x,y = random.choice(pixel_list)
+        bot8.place_Pixel(x,y,color)
+        time.sleep(0.016)
+        #debugMessage(f"Placing {x},{y}!")
+        pixel_list.remove([x,y])
+    print(f"Done Dotting")
 
 def getPixel7(x,y):
 	global c7img
