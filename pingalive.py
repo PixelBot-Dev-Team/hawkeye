@@ -6,6 +6,10 @@ import time
 from PIL import Image
 from io import DEFAULT_BUFFER_SIZE
 import random
+from tqdm import tqdm
+import json
+import urllib.request
+import ssl
 
 import matplotlib.pyplot as plt
 import requests
@@ -20,6 +24,8 @@ global start_time
 start_time = datetime.datetime.utcnow()
 
 bot8 = pypxl.Bot("pbt_ttt_1", "dMd>+8%}6DCDC'NH", 7)
+#bot7 = pypxl.Bot("pbt_ttt_2", "BnASyqy577gPX2RD", 7)
+
 def background(f):
     '''
     a threading decorator
@@ -32,12 +38,9 @@ def background(f):
 @background
 @bot8.socketconnection.on("ping.alive")
 def pongalive():
-    command = "window.pingalive=function(){function x(x){for(var r=[],a=_0x4259(\"0x3a4\")+_0x4259(\"0x78d\")+_0x4259(\"0xcac\"),n=a[_0x4259(\"0x762\")],t=0;t<x;t++)r.push(a[_0x4259(\"0xcb7\")](Math[_0x4259(\"0x3be\")](Math.random()*n)));return r.join(\"\")}var r={0:\"g\",1:\"m\",2:\"b\",3:\"o\",4:\"z\",5:\"c\",6:\"f\",7:\"x\",8:\"t\",9:\"a\"},a=r;function n(x){for(var r=[],a=\"abcdefghij\"+_0x4259(\"0xe54\")+_0x4259(\"0x943\")+_0x4259(\"0x7cd\")+\"OPQRSTUVWXYZ\",n=a[_0x4259(\"0x762\")],t=0;t<x;t++)r[_0x4259(\"0x645\")](a.charAt(Math[_0x4259(\"0x3be\")](Math.random()*n)));return r[_0x4259(\"0x280\")](\"\")}return function(){var r=(parseInt(Math.floor(Date.now()/1e3))+1678+\"\")[_0x4259(\"0x8f8\")](\"\"),t=\"\";for(var e in r)0==e&&(t+=n(5)),1==e&&(t+=n(7)),2==e&&(t+=x(3)),3==e&&(t+=n(8)),4==e&&(t+=x(6)),5==e&&(t+=n(3)),6==e&&(t+=n(6)),7==e&&(t+=x(4)),8==e&&(t+=n(7)),9==e&&(t+=n(6)),0===Math.floor(2*Math.random())?t+=a[parseInt(r[e])][_0x4259(\"0xa4e\")+\"e\"]():t+=a[parseInt(r[e])];return t+=\"0=\",result=t,result}()};"
-    bot8.driver.execute_script(command)
-    pingalive = bot8.driver.execute_script("return pingalive()")
-
-    bot8.socketconnection.emit("pong.alive", pingalive)
-    print("pong'd ", pingalive)
+    contents = json.loads(urllib.request.urlopen("https://api.almos.xyz/new?apikey=0amkTtaa0VvpDYyTBR8dMz").read())
+    bot8.socketconnection.emit("pong.alive", contents["pongalive"])
+    print("pong'd ", contents["pongalive"])
 
 def chat_Safety_Check(data):
     createdAt = data["createdAt"]
@@ -127,7 +130,7 @@ def playerAlikeFill(x,y,color):
 				stack.append([x - 1,y])
 		else:
 			print(f"Skipping {x},{y}!")
-	for x,y in pixel_list:
+	for x,y in tqdm(pixel_list):
 		bot8.place_Pixel(x,y,color)
 		#sleeptime = random.uniform(0.016, 0.026)
 		time.sleep(0.016)

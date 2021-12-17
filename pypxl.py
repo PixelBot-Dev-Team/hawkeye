@@ -144,7 +144,7 @@ class Bot():
         redditconfirmconnection.click()
         
         authinfo = self.get_auth(self.driver.get_cookies())
-        
+        self.driver.get("https://example.com")
         return authinfo
 
     def send_Chat(self, text, mention, type, target, color):
