@@ -1,9 +1,7 @@
 import datetime
 import pathlib
-import sqlite3
 import threading
 import time
-from io import DEFAULT_BUFFER_SIZE
 
 import matplotlib.pyplot as plt
 import requests
@@ -54,14 +52,13 @@ def chat_Safety_Check(data):
 @bot7.socketconnection.on("chat.user.message")
 @background
 def logChat7(data):
-    print(data)
     if chat_Safety_Check(data) == True: 
         pass 
     else: 
         return
     messageUsername = data["username"]
     messageGuild = data["guild"]
-    message = data["message"]
+    message = data  ["message"]
     if message == "":
         message = "/here"
     messageIcons = data["icons"]
@@ -69,7 +66,6 @@ def logChat7(data):
     messageChannel = data["channel"]
     messageMention = data["mention"]
     if message == "!restart":
-        print("restart")
         if messageUsername == "AlmosYT" or messageUsername == "SoManyNames":
             print("restart")
             global start_time
@@ -88,10 +84,9 @@ def logChat7(data):
             {message}
 Mentioned People:{messageMention}
             """
-        timestamp = getTimeStamp()
         iconstring = getIcons(messageIcons)
-        content2 = f"Logged <t:{timestamp}:R>"
         timestamp = getTimeStamp()
+        content2 = f"Logged <t:{timestamp}:R>"
         embed = {"description": f"{content}","title": f"{messageUsername} {iconstring} - {messageGuild}"}
         whdata = {"content": f"{content2}","username": f"/7 Chat Message","embeds": [embed],}
         postWebhook(webhook_global, whdata)
@@ -140,48 +135,12 @@ def postChatStats(data):
     totalStat = data[1]
     content = f"""
     Players on Canvas 7>{canvas7Stat}
-Players in total   >{totalStat}"""
+Players in total   >{totalStat}
+These Numbers might not be accurate."""
     timestamp = getTimeStamp()
     embed = {"description": f"{content}","title": "Stats", "color": 16776958} #white
     whdata = {"content": f"Logged <t:{timestamp}:R>","username": "Stats","embeds": [embed],}
     postWebhook(webhook_stats, whdata)
-    #postPlayersRequests()
-    SaveOnlineData(canvas7Stat)
-    
-
-@background
-def postPlayersRequests():
-    bot7.socketconnection.emit(event="painting.players", data=7)
-    bot8.socketconnection.emit(event="painting.players", data=8)
-    time.sleep(4)
-
-@bot7.socketconnection.on("painting.players")
-@background
-def handlePaintingPlayers7(data):
-    bot7Players = data
-
-@bot8.socketconnection.on("painting.players")
-@background
-def handlePaintingPlayers8(data):
-    bot8Players = data
-
-#chat.stats - Charts 
-
-@background
-def createChart():
-    plt.title("PixelPlace Online Users (24h)")
-    plt.suptitle("HawkEye")
-    
-    plt.plot(timeHistory, onlineUsersHistory)
-    plt.gcf().autofmt_xdate()
-
-    plt.savefig("chart.png") 
-
-@background
-def SaveOnlineData(onlineCountTotal):
-    timeHistory.append(datetime.datetime.now())
-    onlineUsersHistory.append(onlineCountTotal)
-
 
 @bot7.socketconnection.on("j")
 @background
@@ -213,7 +172,6 @@ def postLeaves(data):
 @bot7.socketconnection.on("chat.system.delete")
 @background
 def postMutes(data):
-    print(data)
     timestamp = getTimeStamp()
     embed = {"description": f"Logged <t:{timestamp}:R>","title": "Chat Mute detected!", "fields" : [{"name" : "Muted User", "value" : f"{data}"}, {"name" : "Info", "value" : "These logs are not official information. To appeal a mute, join the PixelPlace discord."}], "color": 13036340} #yellow
     whdata = {"content": "","username": "Chat Mutes","embeds": [embed],}
@@ -227,7 +185,7 @@ def checkChatMessage(message,username,canvas):
     for word in spltmessage:
         if word.lower() in slurlist:
             bot7.send_Chat("You have sent a message in chat which is against PixelPlace Terms of Service. The Staff Team will be informed.",f"{username}","whispers",f"{username}", 21)
-            time.sleep(0.8)
+            time.sleep(1)
             bot7.send_Chat("Please refrain from doing so in the future or your account will be muted.",f"{username}","whispers",f"{username}", 21)
             timestamp = getTimeStamp()
             embed = {"description": f"Logged <t:{timestamp}:R>","title": "Bad word detected!", "fields" : [{"name" : "Username", "value" : f"{username}"}, {"name" : "Canvas", "value" : f"{canvas}"}, {"name" : "Message", "value" : f"{message}"}, {"name" : "Detected Word", "value" : f"{word}"}], "color": 14662147} #yellow
@@ -239,7 +197,7 @@ def checkChatMessage(message,username,canvas):
     for word in spltmessage:
         if word.lower() in slurlist1:
             bot7.send_Chat("You have sent a message in chat which might be against PixelPlace Terms of Service.",f"{username}","whispers",f"{username}", 21)
-            time.sleep(0.8)
+            time.sleep(1)
             bot7.send_Chat("Please refrain from doing so in the future or your account will be muted.",f"{username}","whispers",f"{username}", 21)
             timestamp = getTimeStamp()
             embed = {"description": f"Logged <t:{timestamp}:R>","title": "Soft Alert - Bad word detected!", "fields" : [{"name" : "Username", "value" : f"{username}"}, {"name" : "Message", "value" : f"{message}"}, {"name" : "Canvas", "value" : f"{canvas}"}, {"name" : "Detected Word", "value" : f"{word}"}], "color": 13036340} #yellow
@@ -270,15 +228,5 @@ def getIcons(icons):
 	return iconsstr
         
 def postWebhook(url, data):
-    result = requests.post(url, json=data)
-    if 200 <= result.status_code < 300:
-        print(f"Webhook sent {result.status_code} - Data: {data}")
-    else:
-        print(f"Not sent with {result.status_code}, response:\n{result.json()}")
-
-if __name__ == "__main__":
-    time.sleep(45)
-    createChart()
-    while True:
-        time.sleep(1800)
-        createChart()
+    requests.post(url, json=data)
+    time.sleep(1)

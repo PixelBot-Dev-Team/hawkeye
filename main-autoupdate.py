@@ -3,15 +3,15 @@ import sys, os, time, threading, subprocess, fnmatch, pathlib
 CurrentDir = pathlib.Path(__file__).parent.absolute()
 
 class SourceChangeMonitor(threading.Thread):
-                                                                                      
+
         _process = None
-                                                           
+
         POLL_INTERVAL = 3
 
         FILE_PATTERN = r"[!.]*.py"
-                                                 
+
         ROOT_DIRECTORY = CurrentDir
-                                                                                       
+
         PROGRAM = r"main.py"
 
         def __init__(self):
