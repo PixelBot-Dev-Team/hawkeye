@@ -58,6 +58,10 @@ def logChat7(data):
 		return
 	messageUsername = data["username"]
 	messageGuild = data["guild"]
+	if messageGuild == "":
+		divider = ""
+	else:
+		divider = " - "
 	message = data  ["message"]
 	if message == "":
 		message = "/here"
@@ -86,7 +90,7 @@ Mentioned People:{messageMention}
 		iconstring = getIcons(messageIcons)
 		timestamp = getTimeStamp()
 		content2 = f"Logged <t:{timestamp}:R>"
-		embed = {"description": f"{content}","title": f"{messageUsername} {iconstring} - {messageGuild}"}
+		embed = {"description": f"{content}","title": f"{messageUsername} {iconstring}{divider}{messageGuild}"}
 		whdata = {"content": f"{content2}","username": f"/7 Chat Message","embeds": [embed],}
 		postWebhook(webhook_global, whdata)
 		checkChatMessage(message, messageUsername,7)
@@ -100,6 +104,10 @@ def logChat8(data):
 		return
 	messageUsername = data["username"]
 	messageGuild = data["guild"]
+	if messageGuild == "":
+		divider = ""
+	else:
+		divider = " - "
 	message = str(data["message"])
 	if message == "":
 		message = "/here"
@@ -122,7 +130,7 @@ Mentioned People:{messageMention}
 		timestamp = getTimeStamp()
 		iconstring = getIcons(messageIcons)
 		content2 = f"Logged <t:{timestamp}:R>"
-		embed = {"description": f"{content}","title": f"{messageUsername} {iconstring} - {messageGuild}"}
+		embed = {"description": f"{content}","title": f"{messageUsername} {iconstring}{divider}{messageGuild}"}
 		whdata = {"content": f"{content2}","username": f"/8 Chat Message","embeds": [embed],}
 		postWebhook(webhook_mvp, whdata)
 		checkChatMessage(message, messageUsername,8)
