@@ -6,7 +6,7 @@ import time
 import matplotlib.pyplot as plt
 import requests
 
-import pypxl
+import pypixel as pypxl
 
 webhook_onoff = "https://discord.com/api/webhooks/883775606540632075/hHrdNa-UHAaerqtoBWMdnenBsi0Tfd1-zsW78hPEIenvHNN1EA8IvEiNGvanko7zqiL_"
 webhook_mvp = "https://discord.com/api/webhooks/835654940008382464/RsN3Jjg8B6Ukv-8C09MfjktvyGrQztO4At2RIf27w4ZwmLpq_olf7kjr_YXPyAE8Cv43"
@@ -15,7 +15,7 @@ webhook_stats = "https://discord.com/api/webhooks/883773760447066112/qzeDM4A882s
 webhook_mods = "https://discord.com/api/webhooks/883807042656157828/053ufcOenaZo0dZHqBhz1Fd47SAt4qQ5_Wd3ZIMPo_RRcIGbBqguw1zjULrsS2QCMyJ0"
 webhook_mutes = "https://discord.com/api/webhooks/888503958904119356/t-v4e44YADLH7x5mF68XSj0nYKcV07dDRGFQ7z6fmkPTQnqBZ6bIAlfoECU_1Z7sjkOc"
 
-iconlist = {"_1_month" : "<:1month:883780503583465532>","_1_year" : "<:1year:883780503369568277>","_3_months" : "<:3months:883780503440871465>","_admin" : "<:admin:883780503323430933>","_booster" : "<:booster:883780503596060712>","_ppbread" : "<:ppbread:883780503713488916>","_chatmoderator" : "<:chatmoderator:883780503386357781>","_gifter" : "<:gifter:883780503646392370>","_moderator" : "<:moderator:883780503566704710>","_nitro" : "<:nitro:883780503675764736>","_paintingmoderator" : "<:paintingmoderator:883780503151460373>","_paintingowner" : "<:paintingowner:883780503780601866>","_partner" : "<:partner:883780503558299658>","_vip" : "<:vip:883780503516377108>"}
+iconlist = {"_1_month" : "<:1month:883780503583465532>","_1_year" : "<:1year:883780503369568277>","_3_months" : "<:3months:883780503440871465>","_admin" : "<:admin:883780503323430933>","_booster" : "<:booster:883780503596060712>","_ppbread" : "<:ppbread:883780503713488916>","_chat_moderator" : "<:chatmoderator:883780503386357781>","_gifter" : "<:gifter:883780503646392370>","_moderator" : "<:moderator:883780503566704710>","_nitro" : "<:nitro:883780503675764736>","_paintingmoderator" : "<:paintingmoderator:883780503151460373>","_paintingowner" : "<:paintingowner:883780503780601866>","_partner" : "<:partner:883780503558299658>","_vip" : "<:vip:883780503516377108>","_former_global_moderator":"<a:formerglobalmoderator:1067942869786169435>","_3_days":"<a:3days:1067947658372730990>"}
 
 global start_time
 start_time = datetime.datetime.utcnow()
@@ -32,10 +32,12 @@ def background(f):
 	return bg_f
 
 #/8 Bot
-bot8 = pypxl.Bot("ppbt_logbot", ">,PDF[e<$aDQ[2%=", 8)
-bot8Players = {}
+# bot8 = pypxl.Bot("ppbt_logbot", ">,PDF[e<$aDQ[2%=", 8)
+# bot8Players = {}
+# time.sleep(10)
+# print("next")
 #/7 Bot
-bot7 = pypxl.Bot("ppbt_logbot1", "8gD;Ky$EV+De6za5^", 7)
+bot7 = pypxl.Bot("ppbt_logbot", ">,PDF[e<$aDQ[2%=", 7)
 bot7Players = {}
 
 timeHistory = []
@@ -52,9 +54,9 @@ def chat_Safety_Check(data):
 @bot7.socketconnection.on("chat.user.message")
 @background
 def logChat7(data):
-	if chat_Safety_Check(data) == True: 
-		pass 
-	else: 
+	if chat_Safety_Check(data) == True:
+		pass
+	else:
 		return
 	messageUsername = data["username"]
 	messageGuild = data["guild"]
@@ -62,9 +64,13 @@ def logChat7(data):
 		divider = ""
 	else:
 		divider = " - "
-	message = data  ["message"]
-	if message == "":
-		message = "/here"
+	message = data["message"]
+	if message == "" or "/here" in str(message.lower()):
+		x = data["posX"]
+		y = data["posY"]
+		zoom = data["posS"]
+		insert = f"(x:{x},y:{y},zoom:{zoom})"
+		message = f"/here {insert}"
 	messageIcons = data["icons"]
 	messageChannel = data["channel"]
 	messageMention = data["mention"]
@@ -74,7 +80,7 @@ def logChat7(data):
 			global start_time
 			start_time = datetime.datetime.utcnow()
 			bot7.DisconnectFromSocket()
-			bot8.DisconnectFromSocket()
+			# bot8.DisconnectFromSocket()
 	if messageChannel == "global":
 		content = ""
 		if messageMention == "":
@@ -95,45 +101,45 @@ Mentioned People:{messageMention}
 		postWebhook(webhook_global, whdata)
 		checkChatMessage(message, messageUsername,7)
 
-@bot8.socketconnection.on("chat.user.message")
-@background
-def logChat8(data):
-	if chat_Safety_Check(data) == True:
-		pass
-	else:
-		return
-	messageUsername = data["username"]
-	messageGuild = data["guild"]
-	if messageGuild == "":
-		divider = ""
-	else:
-		divider = " - "
-	message = str(data["message"])
-	if message == "":
-		message = "/here"
-	messageIcons = data["icons"]
-	
-	messageChannel = data["channel"]
-	messageMention = data["mention"]
-	if messageChannel == "painting":
-		content = ""
-		if messageMention == "":
-			messageMention = "None"
-			content = f"""
-			{message}
-			"""
-		else:
-			content = f"""
-			{message}
-Mentioned People:{messageMention}
-			"""
-		timestamp = getTimeStamp()
-		iconstring = getIcons(messageIcons)
-		content2 = f"Logged <t:{timestamp}:R>"
-		embed = {"description": f"{content}","title": f"{messageUsername} {iconstring}{divider}{messageGuild}"}
-		whdata = {"content": f"{content2}","username": f"/8 Chat Message","embeds": [embed],}
-		postWebhook(webhook_mvp, whdata)
-		checkChatMessage(message, messageUsername,8)
+# @bot8.socketconnection.on("chat.user.message")
+# @background
+# def logChat8(data):
+# 	if chat_Safety_Check(data) == True:
+# 		pass
+# 	else:
+# 		return
+# 	messageUsername = data["username"]
+# 	messageGuild = data["guild"]
+# 	if messageGuild == "":
+# 		divider = ""
+# 	else:
+# 		divider = " - "
+# 	message = str(data["message"])
+# 	if message == "":
+# 		message = "/here"
+# 	messageIcons = data["icons"]
+
+# 	messageChannel = data["channel"]
+# 	messageMention = data["mention"]
+# 	if messageChannel == "painting":
+# 		content = ""
+# 		if messageMention == "":
+# 			messageMention = "None"
+# 			content = f"""
+# 			{message}
+# 			"""
+# 		else:
+# 			content = f"""
+# 			{message}
+# Mentioned People:{messageMention}
+# 			"""
+# 		timestamp = getTimeStamp()
+# 		iconstring = getIcons(messageIcons)
+# 		content2 = f"Logged <t:{timestamp}:R>"
+# 		embed = {"description": f"{content}","title": f"{messageUsername} {iconstring}{divider}{messageGuild}"}
+# 		whdata = {"content": f"{content2}","username": f"/8 Chat Message","embeds": [embed],}
+# 		postWebhook(webhook_mvp, whdata)
+# 		checkChatMessage(message, messageUsername,8)
 
 @bot7.socketconnection.on("chat.stats")
 @background
@@ -164,7 +170,7 @@ def postJoins(data):
 			if str(name) in data.lower() and data.lower() != "sarpiliiiiii":
 				timestamp = getTimeStamp()
 				embed = {"description": f"Logged <t:{timestamp}:R>","title": "Permabanned User Detected!", "fields" : [{"name" : "Username", "value" : f"{data}"}], "color": 13571349} #red
-				whdata = {"content": "<@&835970992819273748>","username": "AutoMod","embeds": [embed],}
+				whdata = {"content": "","username": "AutoMod","embeds": [embed],}
 				postWebhook(webhook_mods, whdata)
 
 @bot7.socketconnection.on("l")
@@ -182,7 +188,7 @@ def postMutes(data):
 	timestamp = getTimeStamp()
 	embed = {"description": f"Logged <t:{timestamp}:R>","title": "Chat Mute detected!", "fields" : [{"name" : "Muted User", "value" : f"{data}"}, {"name" : "Info", "value" : "These logs are not official information. To appeal a mute, join the PixelPlace discord."}], "color": 13036340} #yellow
 	whdata = {"content": "","username": "Chat Mutes","embeds": [embed],}
-	postWebhook(webhook_mutes, whdata)      
+	postWebhook(webhook_mutes, whdata)
 
 #To collect slurs: https://forms.gle/Ti9BoJEmDvzVGnwq7
 def checkChatMessage(message,username,canvas):
@@ -191,34 +197,34 @@ def checkChatMessage(message,username,canvas):
 	slurlist = file.read().splitlines()
 	for word in spltmessage:
 		if word.lower() in slurlist:
-			bot7.send_Chat("You have sent a message in chat which is against PixelPlace Terms of Service. The Staff Team will be informed.",f"{username}","whispers",f"{username}", 21)
-			time.sleep(1)
-			bot7.send_Chat("Please refrain from doing so in the future or your account will be muted.",f"{username}","whispers",f"{username}", 21)
+			# bot7.send_Chat("You have sent a message in chat which is against PixelPlace Terms of Service. The Staff Team will be informed.",f"{username}","whispers",f"{username}", 21)
+			# time.sleep(1)
+			# bot7.send_Chat("Please refrain from doing so in the future or your account will be muted.",f"{username}","whispers",f"{username}", 21)
 			timestamp = getTimeStamp()
 			embed = {"description": f"Logged <t:{timestamp}:R>","title": "Bad word detected!", "fields" : [{"name" : "Username", "value" : f"{username}"}, {"name" : "Canvas", "value" : f"{canvas}"}, {"name" : "Message", "value" : f"{message}"}, {"name" : "Detected Word", "value" : f"{word}"}], "color": 14662147} #yellow
-			whdata = {"content": "<@&835970992819273748>","username": "AutoMod","embeds": [embed],}
-			postWebhook(webhook_mods, whdata)            
+			whdata = {"content": "","username": "AutoMod","embeds": [embed],}
+			postWebhook(webhook_mods, whdata)
 		file.close()
 	file1 = open(f"{CurrentDir}/softfilter.txt",'r')
 	slurlist1 = file1.read().splitlines()
 	for word in spltmessage:
 		if word.lower() in slurlist1:
-			bot7.send_Chat("You have sent a message in chat which might be against PixelPlace Terms of Service.",f"{username}","whispers",f"{username}", 21)
-			time.sleep(1)
-			bot7.send_Chat("Please refrain from doing so in the future or your account will be muted.",f"{username}","whispers",f"{username}", 21)
+			# bot7.send_Chat("You have sent a message in chat which might be against PixelPlace Terms of Service.",f"{username}","whispers",f"{username}", 21)
+			# time.sleep(1)
+			# bot7.send_Chat("Please refrain from doing so in the future or your account will be muted.",f"{username}","whispers",f"{username}", 21)
 			timestamp = getTimeStamp()
 			embed = {"description": f"Logged <t:{timestamp}:R>","title": "Soft Alert - Bad word detected!", "fields" : [{"name" : "Username", "value" : f"{username}"}, {"name" : "Message", "value" : f"{message}"}, {"name" : "Canvas", "value" : f"{canvas}"}, {"name" : "Detected Word", "value" : f"{word}"}], "color": 13036340} #yellow
 			whdata = {"content": "","username": "AutoMod","embeds": [embed],}
-			postWebhook(webhook_mods, whdata)            
+			postWebhook(webhook_mods, whdata)
 		file.close()
 	file = open(f"{CurrentDir}/banned.txt",'r')
 	banned = file.read().splitlines()
 	if username.lower() in str(banned):
 		timestamp = getTimeStamp()
 		embed = {"description": f"Logged <t:{timestamp}:R>","title": "Permabanned User Detected!", "fields" : [{"name" : "Username", "value" : f"{username}"}], "color": 13571349} #red
-		whdata = {"content": "<@&835970992819273748>","username": "AutoMod","embeds": [embed],}
+		whdata = {"content": "","username": "AutoMod","embeds": [embed],}
 		postWebhook(webhook_mods, whdata)
-	
+
 def getTimeStamp():
 	epoch = str(time.time()).split(".")[0]
 	return epoch
@@ -237,7 +243,7 @@ def getIcons(icons):
 			continue
 		iconsstr = f"{iconsstr}{formatted_icon}"
 	return iconsstr
-		
+
 def postWebhook(url, data):
 	requests.post(url, json=data)
 	time.sleep(1)
