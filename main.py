@@ -18,6 +18,7 @@ webhook_nonenglish = "https://discord.com/api/webhooks/1069645268808634463/nyWeu
 webhook_anarchy = "https://discord.com/api/webhooks/1069654465180881016/QBgsP1x89uPsuPlfdxnKBWu6KMAdlsQ55MKXl_6FcUKPSmtgVrbcmEDyGh5jnAzSKTbl"
 webhook_gifts = "https://discord.com/api/webhooks/1069671206678175774/6oC9cFqw-hyBbYkuolhW7eJ_u5qYDbATjHBhK1lCCxZx7vJ86vm91vXqreR4ujrnefru"
 webhook_CoinIslandNotif = "https://discord.com/api/webhooks/1069671531539603477/NflDPBF_51vysbpJnyyFXqVP8oApcIAfFjQFvLa8zEKIUVcNLhBTqsviEssNYI1m2Iif"
+webhook_ItemLogs = "https://discord.com/api/webhooks/1069693721014190131/5W6y8OUesWPe2IAEykdowVnpaRl9Wyc_UfWEC6mtECb9t_At1S-G7ET0yq9Z770HOQnq"
 
 CoinIsland_roles = {
 	0:"discord role ping goes here",
@@ -27,7 +28,8 @@ CoinIsland_roles = {
 }
 
 badgeDict = {"_1_month" : "<:1month:883780503583465532>","_1_year" : "<:1year:883780503369568277>","_3_months" : "<:3months:883780503440871465>","_admin" : "<:admin:883780503323430933>","_booster" : "<:booster:883780503596060712>","_ppbread" : "<:ppbread:883780503713488916>","_chat_moderator" : "<:chatmoderator:883780503386357781>","_gifter" : "<:gifter:883780503646392370>","_moderator" : "<:moderator:883780503566704710>","_nitro" : "<:nitro:883780503675764736>","_paintingmoderator" : "<:paintingmoderator:883780503151460373>","_paintingowner" : "<:paintingowner:883780503780601866>","_partner" : "<:partner:883780503558299658>","_vip" : "<:vip:883780503516377108>","_former_global_moderator":"<a:formerglobalmoderator:1067942869786169435>","_3_days":"<a:3days:1067947658372730990>"}
-gift_items = {1:"Pixel Missile",2:"Pixel Bomb",3:"Atmic Bomb",4:"Premium (1 Month)",5:"Premium (1 Year)",6:"Rainbow Username",7:"Guild Bomb",8:"Avatar Bomb",9:"Name Change",10:"XMAS Username",11:"Premium (3 Days)",12:"HALLOWEEN Username",}
+pp_items = {1:"Pixel Missile",2:"Pixel Bomb",3:"Atmic Bomb",4:"Premium (1 Month)",5:"Premium (1 Year)",6:"Rainbow Username",7:"Guild Bomb",8:"Avatar Bomb",9:"Name Change",10:"XMAS Username",11:"Premium (3 Days)",12:"HALLOWEEN Username",}
+# pp_id_to_hex = {0:"#FFFFFF",1:"#C4C4C4",2:"#888888",3:"#555555",4:"#222222",5:"#000000",6:"#006600",7:"#22B14C",8:"#02BE01",9:"#51E119",10:"#94E044",11:"#FBFF5B",12:"#E5D900",13:"#E6BE0C",14:"#E59500",15:"#A06A42",16:"#99530D",17:"#633C1F",18:"#6B0000",19:"#9F0000",20:"#E50000",21:"#FF3904",22:"#BB4F00",23:"#FF755F",24:"#FFC49F",25:"#FFDFCC",26:"#FFA7D1",27:"#CF6EE4",28:"#EC08EC",29:"#820080",30:"#5100FF",31:"#020763",32:"#0000EA",33:"#044BFF",34:"#6583CF",35:"#36BAFF",36:"#0083C7",37:"#00D3DD",38:"#45FFC8",39:"#003638",40:"#477050",41:"#98FB98",42:"#FF7000",43:"#CE2939",44:"#FF416A",45:"#7D26CD",46:"#330077",47:"#005BA1",48:"#B5E8EE",49:"#1B7400"}
 
 global socketconnection7
 socketconnection7 = socketio.Client(reconnection=True, logger=False, engineio_logger=False)
@@ -262,8 +264,7 @@ def postMutes(data):
 def postGifts(data):
 	gifter = data["from"]
 	gifted = data["to"]
-	item = data["item"]
-	gift = gift_items[item]
+	gift = pp_items[data["item"]]
 	embed = {"description": f"Logged <t:{getTimeStamp()}:R>","title": "Gift detected!", "fields" : [{"name" : "Gifted User", "value" : f"{gifted}"}, {"name" : "Gifter", "value" : f"{gifter}"}, {"name" : "Item", "value" : f"{gift}"}], "color": 13036340} #yellow
 	whdata = {"content": "","username": "Gift Logs","embeds": [embed],}
 	postWebhook(webhook_gifts, whdata)
@@ -279,19 +280,25 @@ def postCoinIslandNotif(data):
 	whdata = {"content": f"{ping}","username": "Coin Island Logs","embeds": [embed],}
 	postWebhook(webhook_CoinIslandNotif, whdata)
 
-# @socketconnection7.on("item.notification.use")
-# @background
-# def postCoinIslandNotif(data):
-# 	newOwner = data["from"]
-# 	coinsGained = data["amount"]
-# 	islandId = data["island"]
-# 	ping = CoinIsland_roles[islandId]
-# 	embed = {"description": f"Logged <t:{getTimeStamp()}:R>","title": f"Coin Island {islandId} has a new Owner", "fields" : [{"name" : "New Owner", "value" : f"{newOwner}"}, {"name" : "Coins gained", "value" : f"{coinsGained}"}], "color": 13036340} #yellow
-# 	whdata = {"content": f"{ping}","username": "Coin Island Logs","embeds": [embed],}
-# 	postWebhook(webhook_CoinIslandNotif, whdata)
+@socketconnection7.on("item.notification.use")
+@background
+def postItemUse(data):
+	user = data["from"]
+	item = data["itemName"]
+	canvas = data["painting"]
+	x = data["x"]
+	y = data["y"]
+	zoom = data["zoom"]
+	color = data["c"] # pp id
+	embed = {"description": f"Logged <t:{getTimeStamp()}:R>","title": f"{item} used!", "fields" : [{"name" : "Username", "value" : f"{user}"}, {"name" : "X", "value" : f"{x}"}, {"name" : "Y", "value" : f"{y}"}], "color": 13036340}
+	whdata = {"content": f"<https://pixelplace.io/{canvas}#x={x}&y={y}&s={zoom}>","username": "Item usage logs","embeds": [embed],}
+	postWebhook(webhook_ItemLogs, whdata)
 
+# 42["area_fight_start",{"id":"4","fightEndAt":1675107586,"nextFightAt":0,"fightType":0}]
+# 42["area_fight_start",{"id":"3","fightEndAt":1675108487,"nextFightAt":0,"fightType":1}]
 
-# {"userId":37635,"from":"AlmosYT","item":1,"itemName":"Pixel Missile","painting":7,"x":1451,"y":853,"c":38,"zoom":1}]
+# 42["area_fight_end",{"id":"7","defended":false,"ownedBy":"GRPE","ownedByGuild":"","previousOwner":"FOCF","fightType":0,"points":4,"stats":[{"guild":"GRPE","pixels":3700,"users":1},{"guild":"HVCD","pixels":2997,"users":1},{"guild":"VOID","pixels":806,"users":1},{"guild":"SCAN","pixels":539,"users":1},{"guild":"TURK","pixels":109,"users":1}],"total":{"guilds":6,"pixels":8161,"users":6},"nextFight":900,"canvas":69696}]
+# 42["area_fight_end",{"id":"4","defended":false,"ownedBy":"TBTM","ownedByGuild":"","previousOwner":"Libyanboii","fightType":0,"points":8,"stats":[{"guild":"TBTM","pixels":1917,"users":1},{"guild":"TURK","pixels":1065,"users":1},{"guild":"THFG","pixels":721,"users":1},{"guild":"FOCF","pixels":334,"users":1}],"total":{"guilds":4,"pixels":4037,"users":4},"nextFight":900,"canvas":69904}]
 
 # 42["areas",[
 # {"name":"Australian","state":0,"ownedBy":"Artttt","canvas":55863,"fightEndAt":1675013882,"nextFightAt":0,"fightType":1,"stats":{},"total":{"guilds":0,"pixels":0,"users":0},"xStart":2120,"yStart":1304,"xEnd":2170,"yEnd":1354,"points":10},
@@ -304,7 +311,6 @@ def postCoinIslandNotif(data):
 # {"name":"Greenland","state":0,"ownedBy":"FOCF","canvas":41627,"fightEndAt":1675009377,"nextFightAt":0,"fightType":0,"stats":{},"total":{"guilds":0,"pixels":0,"users":0},"xStart":870,"yStart":186,"xEnd":920,"yEnd":236,"points":4},
 # {"name":"United States","state":0,"ownedBy":"GRPE","canvas":69696,"fightEndAt":1675015684,"nextFightAt":0,"fightType":0,"stats":{},"total":{"guilds":0,"pixels":0,"users":0},"xStart":456,"yStart":810,"xEnd":506,"yEnd":860,"points":12}]]
 
-# 42["area_fight_end",{"id":"7","defended":false,"ownedBy":"GRPE","ownedByGuild":"","previousOwner":"FOCF","fightType":0,"points":4,"stats":[{"guild":"GRPE","pixels":3700,"users":1},{"guild":"HVCD","pixels":2997,"users":1},{"guild":"VOID","pixels":806,"users":1},{"guild":"SCAN","pixels":539,"users":1},{"guild":"TURK","pixels":109,"users":1}],"total":{"guilds":6,"pixels":8161,"users":6},"nextFight":900,"canvas":69696}]
 
 # Helper Methods
 
