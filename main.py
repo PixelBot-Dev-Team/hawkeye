@@ -20,12 +20,7 @@ webhook_gifts = "https://discord.com/api/webhooks/1069671206678175774/6oC9cFqw-h
 webhook_CoinIslandNotif = "https://discord.com/api/webhooks/1069671531539603477/NflDPBF_51vysbpJnyyFXqVP8oApcIAfFjQFvLa8zEKIUVcNLhBTqsviEssNYI1m2Iif"
 webhook_ItemLogs = "https://discord.com/api/webhooks/1069693721014190131/5W6y8OUesWPe2IAEykdowVnpaRl9Wyc_UfWEC6mtECb9t_At1S-G7ET0yq9Z770HOQnq"
 
-CoinIsland_roles = {
-	0:"discord role ping goes here",
-	1:"discord role ping goes here",
-	2:"discord role ping goes here",
-	3:"discord role ping goes here",
-}
+CoinIsland_roles = {0:"<@&1069696793702584320>",1:"<@&1069696820730667120>",2:"<@&1069696859012083762>",3:"<@&1069696893585719367>",}
 
 badgeDict = {"_1_month" : "<:1month:883780503583465532>","_1_year" : "<:1year:883780503369568277>","_3_months" : "<:3months:883780503440871465>","_admin" : "<:admin:883780503323430933>","_booster" : "<:booster:883780503596060712>","_ppbread" : "<:ppbread:883780503713488916>","_chat_moderator" : "<:chatmoderator:883780503386357781>","_gifter" : "<:gifter:883780503646392370>","_moderator" : "<:moderator:883780503566704710>","_nitro" : "<:nitro:883780503675764736>","_paintingmoderator" : "<:paintingmoderator:883780503151460373>","_paintingowner" : "<:paintingowner:883780503780601866>","_partner" : "<:partner:883780503558299658>","_vip" : "<:vip:883780503516377108>","_former_global_moderator":"<a:formerglobalmoderator:1067942869786169435>","_3_days":"<a:3days:1067947658372730990>"}
 pp_items = {1:"Pixel Missile",2:"Pixel Bomb",3:"Atmic Bomb",4:"Premium (1 Month)",5:"Premium (1 Year)",6:"Rainbow Username",7:"Guild Bomb",8:"Avatar Bomb",9:"Name Change",10:"XMAS Username",11:"Premium (3 Days)",12:"HALLOWEEN Username",}
@@ -256,7 +251,7 @@ def postLeaves(data):
 @background
 def postMutes(data):
 	embed = {"description": f"Logged <t:{getTimeStamp()}:R>","title": "Chat Mute detected!", "fields" : [{"name" : "Muted User", "value" : f"{data}"}, {"name" : "Info", "value" : "These logs are not official information. To appeal a mute, join the PixelPlace discord."}], "color": 13036340} #yellow
-	whdata = {"content": "","username": "Chat Mutes","embeds": [embed],}
+	whdata = {"content": "<@&1069701352479010846>","username": "Chat Mutes","embeds": [embed],}
 	postWebhook(webhook_mutes, whdata)
 
 @socketconnection7.on("item.notification.gift")
@@ -294,23 +289,38 @@ def postItemUse(data):
 	whdata = {"content": f"<https://pixelplace.io/{canvas}#x={x}&y={y}&s={zoom}>","username": "Item usage logs","embeds": [embed],}
 	postWebhook(webhook_ItemLogs, whdata)
 
-# 42["area_fight_start",{"id":"4","fightEndAt":1675107586,"nextFightAt":0,"fightType":0}]
-# 42["area_fight_start",{"id":"3","fightEndAt":1675108487,"nextFightAt":0,"fightType":1}]
+# 0 |
+# 1 |
+# 2 |
+# 3 |
+# 4 | canada
+# 5 | brazil
+# 6 | chinese
+# 7 |
+# 8 | united states
+# 9 |
 
-# 42["area_fight_end",{"id":"7","defended":false,"ownedBy":"GRPE","ownedByGuild":"","previousOwner":"FOCF","fightType":0,"points":4,"stats":[{"guild":"GRPE","pixels":3700,"users":1},{"guild":"HVCD","pixels":2997,"users":1},{"guild":"VOID","pixels":806,"users":1},{"guild":"SCAN","pixels":539,"users":1},{"guild":"TURK","pixels":109,"users":1}],"total":{"guilds":6,"pixels":8161,"users":6},"nextFight":900,"canvas":69696}]
-# 42["area_fight_end",{"id":"4","defended":false,"ownedBy":"TBTM","ownedByGuild":"","previousOwner":"Libyanboii","fightType":0,"points":8,"stats":[{"guild":"TBTM","pixels":1917,"users":1},{"guild":"TURK","pixels":1065,"users":1},{"guild":"THFG","pixels":721,"users":1},{"guild":"FOCF","pixels":334,"users":1}],"total":{"guilds":4,"pixels":4037,"users":4},"nextFight":900,"canvas":69904}]
+# ping = <@&1069696750060838942>
 
-# 42["areas",[
-# {"name":"Australian","state":0,"ownedBy":"Artttt","canvas":55863,"fightEndAt":1675013882,"nextFightAt":0,"fightType":1,"stats":{},"total":{"guilds":0,"pixels":0,"users":0},"xStart":2120,"yStart":1304,"xEnd":2170,"yEnd":1354,"points":10},
-# {"name":"Russian","state":0,"ownedBy":"RDRA","canvas":55940,"fightEndAt":1675007575,"nextFightAt":0,"fightType":0,"stats":{},"total":{"guilds":0,"pixels":0,"users":0},"xStart":1896,"yStart":446,"xEnd":1946,"yEnd":496,"points":7},
-# {"name":"African","state":0,"ownedBy":"FOCF","canvas":41627,"fightEndAt":1675005773,"nextFightAt":0,"fightType":0,"stats":{},"total":{"guilds":0,"pixels":0,"users":0},"xStart":1244,"yStart":948,"xEnd":1294,"yEnd":998,"points":6},
-# {"name":"Antarctica","state":0,"ownedBy":"Thanos69420","canvas":0,"fightEndAt":1675012981,"nextFightAt":0,"fightType":1,"stats":{},"total":{"guilds":0,"pixels":0,"users":0},"xStart":1308,"yStart":1748,"xEnd":1358,"yEnd":1798,"points":4},
-# {"name":"Canadian","state":0,"ownedBy":"Libyanboii","canvas":34493,"fightEndAt":1675008476,"nextFightAt":0,"fightType":1,"stats":{},"total":{"guilds":0,"pixels":0,"users":0},"xStart":455,"yStart":650,"xEnd":505,"yEnd":700,"points":8},
-# {"name":"Brazilian","state":0,"ownedBy":"GRPE","canvas":69696,"fightEndAt":1675014783,"nextFightAt":0,"fightType":0,"stats":{},"total":{"guilds":0,"pixels":0,"users":0},"xStart":810,"yStart":1190,"xEnd":860,"yEnd":1240,"points":4},
-# {"name":"Chinese","state":0,"ownedBy":"Hqjk","canvas":0,"fightEndAt":1675011179,"nextFightAt":0,"fightType":1,"stats":{},"total":{"guilds":0,"pixels":0,"users":0},"xStart":1902,"yStart":846,"xEnd":1952,"yEnd":896,"points":6},
-# {"name":"Greenland","state":0,"ownedBy":"FOCF","canvas":41627,"fightEndAt":1675009377,"nextFightAt":0,"fightType":0,"stats":{},"total":{"guilds":0,"pixels":0,"users":0},"xStart":870,"yStart":186,"xEnd":920,"yEnd":236,"points":4},
-# {"name":"United States","state":0,"ownedBy":"GRPE","canvas":69696,"fightEndAt":1675015684,"nextFightAt":0,"fightType":0,"stats":{},"total":{"guilds":0,"pixels":0,"users":0},"xStart":456,"yStart":810,"xEnd":506,"yEnd":860,"points":12}]]
+# @ 21:22:49 42["area_fight_start",{"id":"6","fightEndAt":1675110289,"nextFightAt":0,"fightType":0}]
+# Is a guild War (fighttype 0) (if 1 its a player war)
+# in chinese area (id 6)
 
+# @ 21:24:50 42["area_fight_end",{"id":"6","defended":false,"ownedBy":"TFAL","ownedByGuild":"","previousOwner":"Ionyne","fightType":0,"points":6,"stats":[{"guild":"TFAL","pixels":2163,"users":1},{"guild":"TBTM","pixels":1135,"users":1},{"guild":"ANON","pixels":121,"users":1}],"total":{"guilds":3,"pixels":3419,"users":3},"nextFight":900,"canvas":62077}]
+# some stats (i understand these alr)
+# Is a guild War (fighttype 0)
+# in chinese area (id 6)
+# TFAL won it (ownedBy TFAL)
+# TFAL gained 6 points (points 6)
+# next war in 13 minutes (nextFight 900)
+
+# @ 21:39:52 42["area_fight_end",{"id":"5","defended":false,"ownedBy":"","ownedByGuild":"","previousOwner":"OTLK","fightType":0,"points":0,"stats":[],"total":{"guilds":0,"pixels":0,"users":0},"nextFight":900}]
+# some stats (i understand these alr)
+# Is a guild War (fighttype 0)
+# in brazil area (id 5)
+# noone won it (ownedBy "")
+# noone gained any points (points 0)
+# next war in 13 minutes (nextFight 900)
 
 # Helper Methods
 
