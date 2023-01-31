@@ -39,7 +39,26 @@ socketconnection13 = socketio.Client(reconnection=True, logger=False, engineio_l
 socketconnection13.connect("https://pixelplace.io/socket.io/", transports='websocket', namespaces=["/",])
 socketconnection13.emit(event='init', data={"authId":"Hawkeye13","boardId":13})
 
-#ill do the new stuff now
+@socketconnection7.on("throw.error")
+def error7(data):
+	print(data)
+	socketconnection7.disconnect()
+	socketconnection7.connect("https://pixelplace.io/socket.io/", transports='websocket', namespaces=["/",])
+	socketconnection7.emit(event='init', data={"authId":"Hawkeye7","boardId":7})
+
+@socketconnection8.on("throw.error")
+def error8(data):
+	print(data)
+	socketconnection8.disconnect()
+	socketconnection8.connect("https://pixelplace.io/socket.io/", transports='websocket', namespaces=["/",])
+	socketconnection8.emit(event='init', data={"authId":"Hawkeye8","boardId":8})
+
+@socketconnection13.on("throw.error")
+def error13(data):
+	print(data)
+	socketconnection13.disconnect()
+	socketconnection13.connect("https://pixelplace.io/socket.io/", transports='websocket', namespaces=["/",])
+	socketconnection13.emit(event='init', data={"authId":"Hawkeye13","boardId":13})
 
 global start_time
 start_time = datetime.datetime.utcnow()
@@ -289,16 +308,15 @@ def postItemUse(data):
 	whdata = {"content": f"<https://pixelplace.io/{canvas}#x={x}&y={y}&s={zoom}>","username": "Item usage logs","embeds": [embed],}
 	postWebhook(webhook_ItemLogs, whdata)
 
-# 0 |
-# 1 |
-# 2 |
-# 3 |
+# 0 | australia
+# 1 | russia
+# 2 | africa
+# 3 | antarctica
 # 4 | canada
 # 5 | brazil
 # 6 | chinese
-# 7 |
+# 7 | greenland
 # 8 | united states
-# 9 |
 
 # ping = <@&1069696750060838942>
 
