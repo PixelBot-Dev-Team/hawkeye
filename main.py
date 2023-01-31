@@ -19,11 +19,14 @@ webhook_anarchy = "https://discord.com/api/webhooks/1069654465180881016/QBgsP1x8
 webhook_gifts = "https://discord.com/api/webhooks/1069671206678175774/6oC9cFqw-hyBbYkuolhW7eJ_u5qYDbATjHBhK1lCCxZx7vJ86vm91vXqreR4ujrnefru"
 webhook_CoinIslandNotif = "https://discord.com/api/webhooks/1069671531539603477/NflDPBF_51vysbpJnyyFXqVP8oApcIAfFjQFvLa8zEKIUVcNLhBTqsviEssNYI1m2Iif"
 webhook_ItemLogs = "https://discord.com/api/webhooks/1069693721014190131/5W6y8OUesWPe2IAEykdowVnpaRl9Wyc_UfWEC6mtECb9t_At1S-G7ET0yq9Z770HOQnq"
+webhook_WarNotifs = "https://discord.com/api/webhooks/1070057490009567233/qKMUIhEhnTV3L06sYaUzdCMLAyUimJg1vbQl_i-rekC7wQozod_avxnY8fBCGo8o30ms"
 
 CoinIsland_roles = {0:"<@&1069696793702584320>",1:"<@&1069696820730667120>",2:"<@&1069696859012083762>",3:"<@&1069696893585719367>",}
 
 badgeDict = {"_1_month" : "<:1month:883780503583465532>","_1_year" : "<:1year:883780503369568277>","_3_months" : "<:3months:883780503440871465>","_admin" : "<:admin:883780503323430933>","_booster" : "<:booster:883780503596060712>","_ppbread" : "<:ppbread:883780503713488916>","_chat_moderator" : "<:chatmoderator:883780503386357781>","_gifter" : "<:gifter:883780503646392370>","_moderator" : "<:moderator:883780503566704710>","_nitro" : "<:nitro:883780503675764736>","_paintingmoderator" : "<:paintingmoderator:883780503151460373>","_paintingowner" : "<:paintingowner:883780503780601866>","_partner" : "<:partner:883780503558299658>","_vip" : "<:vip:883780503516377108>","_former_global_moderator":"<a:formerglobalmoderator:1067942869786169435>","_3_days":"<a:3days:1067947658372730990>"}
 pp_items = {1:"Pixel Missile",2:"Pixel Bomb",3:"Atmic Bomb",4:"Premium (1 Month)",5:"Premium (1 Year)",6:"Rainbow Username",7:"Guild Bomb",8:"Avatar Bomb",9:"Name Change",10:"XMAS Username",11:"Premium (3 Days)",12:"HALLOWEEN Username",}
+warAreas = {0:"Australia",1:"Russia",2:"Africa",3:"Antarctica",4:"Canadad",5:"Brazil",6:"China",7:"Greenland",8:"US",}
+
 # pp_id_to_hex = {0:"#FFFFFF",1:"#C4C4C4",2:"#888888",3:"#555555",4:"#222222",5:"#000000",6:"#006600",7:"#22B14C",8:"#02BE01",9:"#51E119",10:"#94E044",11:"#FBFF5B",12:"#E5D900",13:"#E6BE0C",14:"#E59500",15:"#A06A42",16:"#99530D",17:"#633C1F",18:"#6B0000",19:"#9F0000",20:"#E50000",21:"#FF3904",22:"#BB4F00",23:"#FF755F",24:"#FFC49F",25:"#FFDFCC",26:"#FFA7D1",27:"#CF6EE4",28:"#EC08EC",29:"#820080",30:"#5100FF",31:"#020763",32:"#0000EA",33:"#044BFF",34:"#6583CF",35:"#36BAFF",36:"#0083C7",37:"#00D3DD",38:"#45FFC8",39:"#003638",40:"#477050",41:"#98FB98",42:"#FF7000",43:"#CE2939",44:"#FF416A",45:"#7D26CD",46:"#330077",47:"#005BA1",48:"#B5E8EE",49:"#1B7400"}
 
 global socketconnection7
@@ -269,8 +272,8 @@ def postLeaves(data):
 @socketconnection7.on("chat.system.delete")
 @background
 def postMutes(data):
-	embed = {"description": f"Logged <t:{getTimeStamp()}:R>","title": "Chat Mute detected!", "fields" : [{"name" : "Muted User", "value" : f"{data}"}, {"name" : "Info", "value" : "These logs are not official information. To appeal a mute, join the PixelPlace discord."}], "color": 13036340} #yellow
-	whdata = {"content": "<@&1069701352479010846>","username": "Chat Mutes","embeds": [embed],}
+	embed = {"description": f"","title": "Chat Mute detected!", "fields" : [{"name" : "Muted User", "value" : f"{data}"}, {"name" : "Info", "value" : "These logs are not official information. To appeal a mute, join the PixelPlace discord."}], "color": 13036340} #yellow
+	whdata = {"content": f"Logged <t:{getTimeStamp()}:R> || <@&1069701352479010846> ||","username": "Chat Mutes","embeds": [embed],}
 	postWebhook(webhook_mutes, whdata)
 
 @socketconnection7.on("item.notification.gift")
@@ -279,8 +282,8 @@ def postGifts(data):
 	gifter = data["from"]
 	gifted = data["to"]
 	gift = pp_items[data["item"]]
-	embed = {"description": f"Logged <t:{getTimeStamp()}:R>","title": "Gift detected!", "fields" : [{"name" : "Gifted User", "value" : f"{gifted}"}, {"name" : "Gifter", "value" : f"{gifter}"}, {"name" : "Item", "value" : f"{gift}"}], "color": 13036340} #yellow
-	whdata = {"content": "","username": "Gift Logs","embeds": [embed],}
+	embed = {"description":"","title": "Gift detected!", "fields" : [{"name" : "Gifted User", "value" : f"{gifted}"}, {"name" : "Gifter", "value" : f"{gifter}"}, {"name" : "Item", "value" : f"{gift}"}], "color": 13036340} #yellow
+	whdata = {"content": f"Logged <t:{getTimeStamp()}:R>","username": "Gift Logs","embeds": [embed],}
 	postWebhook(webhook_gifts, whdata)
 
 @socketconnection7.on("coin_island_owner_change")
@@ -290,8 +293,8 @@ def postCoinIslandNotif(data):
 	coinsGained = data["amount"]
 	islandId = data["island"]
 	ping = CoinIsland_roles[islandId]
-	embed = {"description": f"Logged <t:{getTimeStamp()}:R>","title": f"Coin Island {islandId} has a new Owner", "fields" : [{"name" : "New Owner", "value" : f"{newOwner}"}, {"name" : "Coins gained", "value" : f"{coinsGained}"}], "color": 13036340} #yellow
-	whdata = {"content": f"{ping}","username": "Coin Island Logs","embeds": [embed],}
+	embed = {"description": "","title": f"Coin Island {islandId} has a new Owner", "fields" : [{"name" : "New Owner", "value" : f"{newOwner}"}, {"name" : "Coins gained", "value" : f"{coinsGained}"}], "color": 13036340} #yellow
+	whdata = {"content": f"Logged <t:{getTimeStamp()}:R> || {ping} ||","username": "Coin Island Logs","embeds": [embed],}
 	postWebhook(webhook_CoinIslandNotif, whdata)
 
 @socketconnection7.on("item.notification.use")
@@ -304,41 +307,34 @@ def postItemUse(data):
 	y = data["y"]
 	zoom = data["zoom"]
 	color = data["c"] # pp id
-	embed = {"description": f"Logged <t:{getTimeStamp()}:R>","title": f"{item} used!", "fields" : [{"name" : "Username", "value" : f"{user}"}, {"name" : "X", "value" : f"{x}"}, {"name" : "Y", "value" : f"{y}"}], "color": 13036340}
-	whdata = {"content": f"<https://pixelplace.io/{canvas}#x={x}&y={y}&s={zoom}>","username": "Item usage logs","embeds": [embed],}
+	embed = {"description": f"<https://pixelplace.io/{canvas}#x={x}&y={y}&s={zoom}>","title": f"{item} used!", "fields" : [{"name" : "Username", "value" : f"{user}"}, {"name" : "X", "value" : f"{x}"}, {"name" : "Y", "value" : f"{y}"}], "color": 13036340}
+	whdata = {"content": f"Logged <t:{getTimeStamp()}:R>","username": "Item usage logs","embeds": [embed],}
 	postWebhook(webhook_ItemLogs, whdata)
 
-# 0 | australia
-# 1 | russia
-# 2 | africa
-# 3 | antarctica
-# 4 | canada
-# 5 | brazil
-# 6 | chinese
-# 7 | greenland
-# 8 | united states
+@socketconnection7.on("area_fight_start")
+@background
+def postWarStart(data):
+	warType = "Player war" if data["fighttype"] else "Guild war"
+	area = warAreas[data["id"]]
+	endTime = data["fightEndAt"]
+	embed = {"description": "","title": "A new war has started!", "fields" : [{"name" : "Area", "value" : f"{area}"}, {"name" : "Type", "value" : f"{warType}"}, {"name" : "End", "value" : f"<t:{endTime}:R>"}], "color": 13036340}
+	whdata = {"content": f"Logged <t:{getTimeStamp()}:R> || <@&1069696750060838942> ||","username": "War logs","embeds": [embed],}
+	postWebhook(webhook_WarNotifs, whdata)
 
-# ping = <@&1069696750060838942>
-
-# @ 21:22:49 42["area_fight_start",{"id":"6","fightEndAt":1675110289,"nextFightAt":0,"fightType":0}]
-# Is a guild War (fighttype 0) (if 1 its a player war)
-# in chinese area (id 6)
-
-# @ 21:24:50 42["area_fight_end",{"id":"6","defended":false,"ownedBy":"TFAL","ownedByGuild":"","previousOwner":"Ionyne","fightType":0,"points":6,"stats":[{"guild":"TFAL","pixels":2163,"users":1},{"guild":"TBTM","pixels":1135,"users":1},{"guild":"ANON","pixels":121,"users":1}],"total":{"guilds":3,"pixels":3419,"users":3},"nextFight":900,"canvas":62077}]
-# some stats (i understand these alr)
-# Is a guild War (fighttype 0)
-# in chinese area (id 6)
-# TFAL won it (ownedBy TFAL)
-# TFAL gained 6 points (points 6)
-# next war in 13 minutes (nextFight 900)
-
-# @ 21:39:52 42["area_fight_end",{"id":"5","defended":false,"ownedBy":"","ownedByGuild":"","previousOwner":"OTLK","fightType":0,"points":0,"stats":[],"total":{"guilds":0,"pixels":0,"users":0},"nextFight":900}]
-# some stats (i understand these alr)
-# Is a guild War (fighttype 0)
-# in brazil area (id 5)
-# noone won it (ownedBy "")
-# noone gained any points (points 0)
-# next war in 13 minutes (nextFight 900)
+@socketconnection7.on("area_fight_start")
+@background
+def postWarEnd(data):
+	warType = "Player war" if data["fighttype"] else "Guild war"
+	area = warAreas[data["id"]]
+	winner = data["ownedBy"]
+	if winner  == "":
+		winner = "No one"
+	gainedPoints = ["points"]
+	nextWarTimer = data["nextFight"]
+	stats = data["stats"]
+	embed = {"description": "","title": f"The {warType} in {area} has ended!", "fields" : [{"name" : "Winner", "value" : f"{winner}"}, {"name" : "Awarded Battle Points", "value" : f"{gainedPoints}"}, {"name" : "Next War", "value" : f"<t:{getTimeStamp() + nextWarTimer}:R>"}], "color": 13036340}
+	whdata = {"content": f"Logged <t:{getTimeStamp()}:R>","username": "War logs","embeds": [embed],}
+	postWebhook(webhook_WarNotifs, whdata)
 
 # Helper Methods
 
@@ -347,8 +343,8 @@ def checkChatMessage(message,username,canvas):
 		slurlist = file.read().splitlines()
 		for word in message.split():
 			if word.lower() in slurlist:
-				embed = {"description": f"Logged <t:{getTimeStamp()}:R>","title": "Bad word detected!", "fields" : [{"name" : "Username", "value" : f"{username}"}, {"name" : "Canvas", "value" : f"{canvas}"}, {"name" : "Message", "value" : f"{message}"}, {"name" : "Detected Word", "value" : f"{word}"}], "color": 14662147} #yellow
-				whdata = {"content": "","username": "AutoMod","embeds": [embed],}
+				embed = {"description": "","title": "Bad word detected!", "fields" : [{"name" : "Username", "value" : f"{username}"}, {"name" : "Canvas", "value" : f"{canvas}"}, {"name" : "Message", "value" : f"{message}"}, {"name" : "Detected Word", "value" : f"{word}"}], "color": 14662147} #yellow
+				whdata = {"content": f"Logged <t:{getTimeStamp()}:R>","username": "AutoMod","embeds": [embed],}
 				postWebhook(webhook_mods, whdata)
 
 def getTimeStamp():
