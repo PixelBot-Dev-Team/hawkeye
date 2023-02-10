@@ -314,6 +314,7 @@ def postItemUse(data):
 @socketconnection7.on("area_fight_start")
 @background
 def postWarStart(data):
+	print("War Started")
 	warType = "Player war" if data["fightType"] else "Guild war"
 	area = warAreas[data["id"]]
 	endTime = data["fightEndAt"]
@@ -324,6 +325,7 @@ def postWarStart(data):
 @socketconnection7.on("area_fight_end")
 @background
 def postWarEnd(data):
+	print("War Ended")
 	warType = "Player war" if data["fightType"] else "Guild war"
 	area = warAreas[data["id"]]
 	winner = data["ownedBy"]
