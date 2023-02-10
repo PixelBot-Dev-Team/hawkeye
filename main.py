@@ -317,7 +317,7 @@ def postWarStart(data):
 	print("War Started")
 	warType = "Player war" if data["fightType"] else "Guild war"
 	area = warAreas[data["id"]]
-	endTime = int(data["fightEndAt"]) + int(getTimeStamp())
+	endTime = int(data["fightEndAt"])
 	embed = {"description": "","title": "A new war has started!", "fields" : [{"name" : "Area", "value" : f"{area}"}, {"name" : "Type", "value" : f"{warType}"}, {"name" : "End", "value" : f"<t:{endTime}:R>"}], "color": 13036340}
 	whdata = {"content": f"Logged <t:{getTimeStamp()}:R> || <@&1069696750060838942> ||","username": "War logs","embeds": [embed],}
 	postWebhook(webhook_WarNotifs, whdata)
@@ -334,7 +334,7 @@ def postWarEnd(data):
 	gainedPoints = ["points"]
 	nextWarTimer = int(data["nextFight"]) + int(getTimeStamp())
 	stats = data["stats"]
-	embed = {"description": "","title": f"The {warType} in {area} has ended!", "fields" : [{"name" : "Winner", "value" : f"{winner}"}, {"name" : "Awarded Battle Points", "value" : f"{gainedPoints}"}, {"name" : "Next War", "value" : f"<t:{getTimeStamp() + nextWarTimer}:R>"}], "color": 13036340}
+	embed = {"description": "","title": f"The {warType} in {area} has ended!", "fields" : [{"name" : "Winner", "value" : f"{winner}"}, {"name" : "Awarded Battle Points", "value" : f"{gainedPoints}"}, {"name" : "Next War", "value" : f"<t:{nextWarTimer}:R>"}], "color": 13036340}
 	whdata = {"content": f"Logged <t:{getTimeStamp()}:R>","username": "War logs","embeds": [embed],}
 	postWebhook(webhook_WarNotifs, whdata)
 
