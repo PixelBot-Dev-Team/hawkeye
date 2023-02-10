@@ -43,6 +43,7 @@ class SourceChangeMonitor(threading.Thread):
                                         self.start_program()
                                         self.lastRestart = time.time()
                                         self.nextRestart = time.time() + 3600
+                                        return
                                 print("Next restart in:", int((self.nextRestart - time.time()) / 60) , "minutes and", int((self.nextRestart - time.time()) % 60), "seconds")
                                 if time.time() > self.nextRestart:
                                         print( "-------------------------------------------------")
