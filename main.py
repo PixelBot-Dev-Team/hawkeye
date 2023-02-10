@@ -331,7 +331,7 @@ def postWarEnd(data):
 	winner = data["ownedBy"]
 	if winner  == "":
 		winner = "No one"
-	gainedPoints = ["points"]
+	gainedPoints = data["points"]
 	nextWarTimer = int(data["nextFight"]) + int(getTimeStamp())
 	stats = data["stats"]
 	embed = {"description": "","title": f"The {warType} in {area} has ended!", "fields" : [{"name" : "Winner", "value" : f"{winner}"}, {"name" : "Awarded Battle Points", "value" : f"{gainedPoints}"}, {"name" : "Next War", "value" : f"<t:{nextWarTimer}:R>"}], "color": 13036340}
