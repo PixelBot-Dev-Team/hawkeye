@@ -122,16 +122,14 @@ def logChat7(data):
 {message}
 {messageMentionInsert}
 """
+	canvas = 7
 	if messageChannel == "global":
 		webhookURL = webhook_global
-		botUsername = "/7 Chat Message"
-		canvas = 7
+		botUsername = "/7 Log"
 	elif messageChannel == "nonenglish":
 		webhookURL = webhook_nonenglish
-		botUsername = "Non english Chat Message"
-		canvas = 7
-	else:
-		print("yo wtf man")
+		botUsername = "Non-English Log"
+
 	embed = {"description": f"{discordMessage}","title": f"{messageUsername} {discordIconString}{discordGuildNameDivider}{messageGuild}"}
 	whdata = {
 		"content": f"{discordRelativeTimestamp}",
@@ -183,7 +181,7 @@ def logChat8(data):
 	embed = {"description": f"{discordMessage}","title": f"{messageUsername} {discordIconString}{discordGuildNameDivider}{messageGuild}"}
 	whdata = {
 		"content": f"{discordRelativeTimestamp}",
-		"username": "/8 Chat Message",
+		"username": "/8 Log",
 		"embeds": [embed],
 	}
 	postWebhook(webhook_mvp, whdata)
@@ -231,7 +229,7 @@ def logChat13(data):
 	embed = {"description": f"{discordMessage}","title": f"{messageUsername} {discordIconString}{discordGuildNameDivider}{messageGuild}"}
 	whdata = {
 		"content": f"{discordRelativeTimestamp}",
-		"username": "/13 (/0) Chat Message",   #
+		"username": "/13 (/0) Log",   #
 		"embeds": [embed],
 	}
 	postWebhook(webhook_anarchy, whdata)
@@ -241,13 +239,9 @@ def logChat13(data):
 @socketconnection7.on("chat.stats")
 @background
 def postChatStats(data):
-	canvas7Stat = data[0]
-	totalStat = data[1]
-	content = f"""
-Players on Canvas 7>{canvas7Stat}
-Players in total   >{totalStat}
-These Numbers might not be accurate."""
-	embed = {"description": f"{content}","title": "Stats", "color": 16776958} #white
+	UsersCount = data[0]
+	ConnectionsCount = data[1]
+	embed = {"description": "","title": "Stats", "fields" : [{"name" : "Users", "value" : f"{UsersCount}"}, {"name" : "Connections", "value" : f"{ConnectionsCount}"}], "color": 16776958}
 	whdata = {"content": f"Logged <t:{getTimeStamp()}:R>","username": "Stats","embeds": [embed],}
 	postWebhook(webhook_stats, whdata)
 
@@ -258,7 +252,7 @@ def postJoins(data):
 		return
 	content = f"{data} joined!"
 	embed = {"description": f"{content}","title": "Joins", "color": 2531122} #green
-	whdata = {"content": f"Logged <t:{getTimeStamp()}:R>","username": "Joins","embeds": [embed],}
+	whdata = {"content": f"Logged <t:{getTimeStamp()}:R>","username": "On/Off Logs","embeds": [embed],}
 	postWebhook(webhook_onoff, whdata)
 
 @socketconnection7.on("l")
@@ -266,14 +260,14 @@ def postJoins(data):
 def postLeaves(data):
 	content = f"{data} left!"
 	embed = {"description": f"{content}","title": "Leaves", "color": 13571349} #red
-	whdata = {"content": f"Logged <t:{getTimeStamp()}:R>","username": "Leaves","embeds": [embed],}
+	whdata = {"content": f"Logged <t:{getTimeStamp()}:R>","username": "On/Off Logs","embeds": [embed],}
 	postWebhook(webhook_onoff, whdata)
 
 @socketconnection7.on("chat.system.delete")
 @background
 def postMutes(data):
-	embed = {"description": f"","title": "Chat Mute detected!", "fields" : [{"name" : "Muted User", "value" : f"{data}"}, {"name" : "Info", "value" : "These logs are not official information. To appeal a mute, join the PixelPlace discord."}], "color": 13036340} #yellow
-	whdata = {"content": f"Logged <t:{getTimeStamp()}:R> || <@&1069701352479010846> ||","username": "Chat Mutes","embeds": [embed],}
+	embed = {"description": f"","title": "Chat Mute detected!", "fields" : [{"name" : "Muted User", "value" : f"{data}"}, {"name" : "Info", "value" : "These logs are not official information. To appeal a mute, join the PixelPlace discord."}], "color": 2123412}
+	whdata = {"content": f"Logged <t:{getTimeStamp()}:R> || <@&1069701352479010846> ||","username": "Chat Mute Logs","embeds": [embed],}
 	postWebhook(webhook_mutes, whdata)
 
 @socketconnection7.on("item.notification.gift")
@@ -282,7 +276,7 @@ def postGifts(data):
 	gifter = data["from"]
 	gifted = data["to"]
 	gift = pp_items[data["item"]]
-	embed = {"description":"","title": "Gift detected!", "fields" : [{"name" : "Gifted User", "value" : f"{gifted}"}, {"name" : "Gifter", "value" : f"{gifter}"}, {"name" : "Item", "value" : f"{gift}"}], "color": 13036340} #yellow
+	embed = {"description":"","title": "Gift detected!", "fields" : [{"name" : "From", "value" : f"{gifter}"}, {"name" : "To", "value" : f"{gifted}"}, {"name" : "Item", "value" : f"{gift}"}], "color": 15844367}
 	whdata = {"content": f"Logged <t:{getTimeStamp()}:R>","username": "Gift Logs","embeds": [embed],}
 	postWebhook(webhook_gifts, whdata)
 
@@ -293,7 +287,7 @@ def postCoinIslandNotif(data):
 	coinsGained = data["amount"]
 	islandId = data["island"]
 	ping = CoinIsland_roles[islandId]
-	embed = {"description": "","title": f"Coin Island {islandId} has a new Owner", "fields" : [{"name" : "New Owner", "value" : f"{newOwner}"}, {"name" : "Coins gained", "value" : f"{coinsGained}"}], "color": 13036340} #yellow
+	embed = {"description": "","title": f"Coin Island {islandId} has a new Owner", "fields" : [{"name" : "New Owner", "value" : f"{newOwner}"}, {"name" : "Coins gained", "value" : f"{coinsGained}"}], "color": 12745742} #yellow
 	whdata = {"content": f"Logged <t:{getTimeStamp()}:R> || {ping} ||","username": "Coin Island Logs","embeds": [embed],}
 	postWebhook(webhook_CoinIslandNotif, whdata)
 
@@ -307,8 +301,8 @@ def postItemUse(data):
 	y = data["y"]
 	zoom = data["zoom"]
 	color = data["c"] # pp id
-	embed = {"description": f"<https://pixelplace.io/{canvas}#x={x}&y={y}&s={zoom}>","title": f"{item} used!", "fields" : [{"name" : "Username", "value" : f"{user}"}, {"name" : "X", "value" : f"{x}"}, {"name" : "Y", "value" : f"{y}"}], "color": 13036340}
-	whdata = {"content": f"Logged <t:{getTimeStamp()}:R>","username": "Item usage logs","embeds": [embed],}
+	embed = {"description": f"<https://pixelplace.io/{canvas}#x={x}&y={y}&s={zoom}>","title": f"{item} used!", "fields" : [{"name" : "Username", "value" : f"{user}"}, {"name" : "X", "value" : f"{x}"}, {"name" : "Y", "value" : f"{y}"}], "color": 1752220}
+	whdata = {"content": f"Logged <t:{getTimeStamp()}:R>","username": "Item usage Logs","embeds": [embed],}
 	postWebhook(webhook_ItemLogs, whdata)
 
 @socketconnection7.on("area_fight_start")
@@ -318,8 +312,8 @@ def postWarStart(data):
 	warType = "Player war" if data["fightType"] else "Guild war"
 	area = warAreas[data["id"]]
 	endTime = int(data["fightEndAt"])
-	embed = {"description": "","title": "A new war has started!", "fields" : [{"name" : "Area", "value" : f"{area}"}, {"name" : "Type", "value" : f"{warType}"}, {"name" : "End", "value" : f"<t:{endTime}:R>"}], "color": 13036340}
-	whdata = {"content": f"Logged <t:{getTimeStamp()}:R> || <@&1069696750060838942> ||","username": "War logs","embeds": [embed],}
+	embed = {"description": "","title": f"A new {area} war has started!", "fields" : [{"name" : "Area", "value" : f"{area}"}, {"name" : "End", "value" : f"<t:{endTime}:R>"}], "color": 15158332}
+	whdata = {"content": f"Logged <t:{getTimeStamp()}:R> || <@&1069696750060838942> ||","username": "War Logs","embeds": [embed],}
 	postWebhook(webhook_WarNotifs, whdata)
 
 @socketconnection7.on("area_fight_end")
@@ -331,10 +325,12 @@ def postWarEnd(data):
 	winner = data["ownedBy"]
 	if winner  == "":
 		winner = "No one"
-	gainedPoints = data["points"]
+	Rewards = f"{data['points']} battle points"
+	if data["ores"]:
+		Rewards = f"{Rewards}\n{data['ores']} gold ores"
 	nextWarTimer = int(data["nextFight"]) + int(getTimeStamp())
-	stats = data["stats"]
-	embed = {"description": "","title": f"The {warType} in {area} has ended!", "fields" : [{"name" : "Winner", "value" : f"{winner}"}, {"name" : "Awarded Battle Points", "value" : f"{gainedPoints}"}, {"name" : "Next War", "value" : f"<t:{nextWarTimer}:R>"}], "color": 13036340}
+	stats = data["stats"] # fuck this
+	embed = {"description": "","title": f"The {warType} in {area} has ended!", "fields" : [{"name" : "Winner", "value" : f"{winner}"}, {"name" : "Rewards", "value" : f"{Rewards}"}, {"name" : "Next War", "value" : f"<t:{nextWarTimer}:R>"}], "color": 3066993}
 	whdata = {"content": f"Logged <t:{getTimeStamp()}:R>","username": "War logs","embeds": [embed],}
 	postWebhook(webhook_WarNotifs, whdata)
 
@@ -345,9 +341,11 @@ def checkChatMessage(message,username,canvas):
 		slurlist = file.read().splitlines()
 		for word in message.split():
 			if word.lower() in slurlist:
+				message = str(message).replace(word,f"*{word}*")
 				embed = {"description": "","title": "Bad word detected!", "fields" : [{"name" : "Username", "value" : f"{username}"}, {"name" : "Canvas", "value" : f"{canvas}"}, {"name" : "Message", "value" : f"{message}"}, {"name" : "Detected Word", "value" : f"{word}"}], "color": 14662147} #yellow
 				whdata = {"content": f"Logged <t:{getTimeStamp()}:R>","username": "AutoMod","embeds": [embed],}
 				postWebhook(webhook_mods, whdata)
+				return
 
 def getTimeStamp():
 	return str(time.time()).split(".")[0]
