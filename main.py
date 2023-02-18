@@ -20,6 +20,7 @@ webhook_gifts = "https://discord.com/api/webhooks/1069671206678175774/6oC9cFqw-h
 webhook_CoinIslandNotif = "https://discord.com/api/webhooks/1069671531539603477/NflDPBF_51vysbpJnyyFXqVP8oApcIAfFjQFvLa8zEKIUVcNLhBTqsviEssNYI1m2Iif"
 webhook_ItemLogs = "https://discord.com/api/webhooks/1069693721014190131/5W6y8OUesWPe2IAEykdowVnpaRl9Wyc_UfWEC6mtECb9t_At1S-G7ET0yq9Z770HOQnq"
 webhook_WarNotifs = "https://discord.com/api/webhooks/1070057490009567233/qKMUIhEhnTV3L06sYaUzdCMLAyUimJg1vbQl_i-rekC7wQozod_avxnY8fBCGo8o30ms"
+webhook_Owmince = "https://discord.com/api/webhooks/1076649651240964157/Zg796VAvk7h2cmNAVt0hO0desZZJc6Um-6DZAHSznz9T8V3YfiSXf7BDu9puXemIFTQQ"
 
 CoinIsland_roles = {0:"<@&1069696793702584320>",1:"<@&1069696820730667120>",2:"<@&1069696859012083762>",3:"<@&1069696893585719367>",}
 
@@ -137,6 +138,8 @@ def logChat7(data):
 		"embeds": [embed],
 	}
 	postWebhook(webhookURL, whdata)
+	if str(messageUsername).lower() == "owmince":
+		postWebhook(webhook_Owmince, whdata)
 	checkChatMessage(message, messageUsername,canvas)
 
 @socketconnection8.on("chat.user.message")
@@ -185,6 +188,8 @@ def logChat8(data):
 		"embeds": [embed],
 	}
 	postWebhook(webhook_mvp, whdata)
+	if str(messageUsername).lower() == "owmince":
+		postWebhook(webhook_Owmince, whdata)
 	checkChatMessage(message, messageUsername,8)
 
 @socketconnection13.on("chat.user.message")
@@ -232,6 +237,8 @@ def logChat13(data):
 		"username": "/13 (/0) Log",   #
 		"embeds": [embed],
 	}
+	if str(messageUsername).lower() == "owmince":
+		postWebhook(webhook_Owmince, whdata)
 	postWebhook(webhook_anarchy, whdata)
 
 # Misc Logs
