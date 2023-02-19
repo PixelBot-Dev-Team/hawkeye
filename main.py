@@ -365,7 +365,7 @@ def checkChatMessage(message,username,canvas):
 	with open(f"{CurrentDir}/filter.txt",'r') as file:
 		slurlist = file.read().splitlines()
 		for word in message.split():
-			if Homoglyphs().to_ascii(word.lower())[0] in slurlist:
+			if Homoglyphs().to_ascii(str(word).lower())[0] in slurlist:
 				message = str(message).replace(word,f"*{word}*")
 				embed = {"description": "","title": "Bad word detected!", "fields" : [{"name" : "Username", "value" : f"{username}"}, {"name" : "Canvas", "value" : f"{canvas}"}, {"name" : "Message", "value" : f"{message}"}, {"name" : "Detected Word", "value" : f"{word}"}], "color": 14662147} #yellow
 				whdata = {"content": f"Logged <t:{getTimeStamp()}:R>","username": "AutoMod","embeds": [embed],}
