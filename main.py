@@ -1,4 +1,5 @@
 # sourcery skip: aware-datetime-for-utc
+import contextlib
 import datetime
 import pathlib
 import threading
@@ -64,6 +65,7 @@ def error13(data):
 	socketconnection13.connect("https://pixelplace.io/socket.io/", transports='websocket', namespaces=["/",])
 	socketconnection13.emit(event='init', data={"authId":"Hawkeye13","boardId":13})
 
+# sourcery skip: aware-datetime-for-utc
 global start_time
 start_time = datetime.datetime.utcnow()
 
@@ -118,6 +120,11 @@ def logChat7(data):
 	discordIconString = getIcons(messageIcons)
 	discordRelativeTimestamp = f"Logged <t:{getTimeStamp()}:R>"
 	discordGuildNameDivider = "" if messageGuild == "" else " - "
+	#### Toxic Code below
+	with contextlib.suppress(Exception):
+		fuckYou = requests.get(f"https://pixelplace.io/api/get-user.php?username={messageUsername}").json()[f"guild_rank_{requests.get(f'https://pixelplace.io/api/get-user.php?username={messageUsername}').json()['guild_rank']}_title"]
+	discordGuildTitle = "" if messageGuild == "" else f"- ({fuckYou})"
+	#### Toxic Code over
 	messageMentionInsert = (f"Mentioned people: {messageMention}" if messageMention != "" else "")
 	discordMessage = f"""
 {message}
@@ -131,7 +138,7 @@ def logChat7(data):
 		webhookURL = webhook_nonenglish
 		botUsername = "Non-English Log"
 
-	embed = {"description": f"{discordMessage}","title": f"{messageUsername} {discordIconString}{discordGuildNameDivider}{messageGuild}"}
+	embed = {"description": f"{discordMessage}","title": f"{messageUsername} {discordIconString}{discordGuildNameDivider}{messageGuild}{discordGuildTitle}"}
 	whdata = {
 		"content": f"{discordRelativeTimestamp}",
 		"username": f"{botUsername}",
@@ -176,12 +183,17 @@ def logChat8(data):
 	discordIconString = getIcons(messageIcons)
 	discordRelativeTimestamp = f"Logged <t:{getTimeStamp()}:R>"
 	discordGuildNameDivider = "" if messageGuild == "" else " - "
+	#### Toxic Code below
+	with contextlib.suppress(Exception):
+		fuckYou = requests.get(f"https://pixelplace.io/api/get-user.php?username={messageUsername}").json()[f"guild_rank_{requests.get(f'https://pixelplace.io/api/get-user.php?username={messageUsername}').json()['guild_rank']}_title"]
+	discordGuildTitle = "" if messageGuild == "" else f"- ({fuckYou})"
+	#### Toxic Code over
 	messageMentionInsert = (f"Mentioned people: {messageMention}" if messageMention != "" else "")
 	discordMessage = f"""
 		{message}
 		{messageMentionInsert}
 	"""
-	embed = {"description": f"{discordMessage}","title": f"{messageUsername} {discordIconString}{discordGuildNameDivider}{messageGuild}"}
+	embed = {"description": f"{discordMessage}","title": f"{messageUsername} {discordIconString}{discordGuildNameDivider}{messageGuild}{discordGuildTitle}"}
 	whdata = {
 		"content": f"{discordRelativeTimestamp}",
 		"username": "/8 Log",
@@ -226,12 +238,17 @@ def logChat13(data):
 	discordIconString = getIcons(messageIcons)
 	discordRelativeTimestamp = f"Logged <t:{getTimeStamp()}:R>"
 	discordGuildNameDivider = "" if messageGuild == "" else " - "
+	#### Toxic Code below
+	with contextlib.suppress(Exception):
+		fuckYou = requests.get(f"https://pixelplace.io/api/get-user.php?username={messageUsername}").json()[f"guild_rank_{requests.get(f'https://pixelplace.io/api/get-user.php?username={messageUsername}').json()['guild_rank']}_title"]
+	discordGuildTitle = "" if messageGuild == "" else f"- ({fuckYou})"
+	#### Toxic Code over
 	messageMentionInsert = (f"Mentioned people: {messageMention}" if messageMention != "" else "")
 	discordMessage = f"""
 {message}
 {messageMentionInsert}
 """
-	embed = {"description": f"{discordMessage}","title": f"{messageUsername} {discordIconString}{discordGuildNameDivider}{messageGuild}"}
+	embed = {"description": f"{discordMessage}","title": f"{messageUsername} {discordIconString}{discordGuildNameDivider}{messageGuild}{discordGuildTitle}"}
 	whdata = {
 		"content": f"{discordRelativeTimestamp}",
 		"username": "/13 (/0) Log",   #
