@@ -333,7 +333,6 @@ def postItemUse(data):
 @socketconnection7.on("area_fight_start")
 @background
 def postWarStart(data):
-	print("War Started")
 	warType = "Player war" if data["fightType"] else "Guild war"
 	area = warAreas[data["id"]]
 	endTime = int(data["fightEndAt"])
@@ -344,14 +343,13 @@ def postWarStart(data):
 @socketconnection7.on("area_fight_end")
 @background
 def postWarEnd(data):
-	print("War Ended")
 	warType = "Player war" if data["fightType"] else "Guild war"
 	area = warAreas[data["id"]]
 	winner = data["ownedBy"]
 	if winner  == "":
 		winner = "No one"
 	Rewards = f"{data['points']} battle points"
-	if data["ores"]:
+	with contextlib.suppress(Exception):
 		Rewards = f"{Rewards}\n{data['ores']} gold ore(s)"
 	nextWarTimer = int(data["nextFight"]) + int(getTimeStamp())
 	stats = data["stats"] # fuck this
@@ -364,13 +362,15 @@ def postWarEnd(data):
 def checkChatMessage(message,username,canvas):
 	with open(f"{CurrentDir}/filter.txt",'r') as file:
 		slurlist = file.read().splitlines()
-		for word in message.split():
-			if Homoglyphs().to_ascii(str(word).lower())[0] in slurlist:
-				message = str(message).replace(word,f"*{word}*")
-				embed = {"description": "","title": "Bad word detected!", "fields" : [{"name" : "Username", "value" : f"{username}"}, {"name" : "Canvas", "value" : f"{canvas}"}, {"name" : "Message", "value" : f"{message}"}, {"name" : "Detected Word", "value" : f"{word}"}], "color": 14662147} #yellow
-				whdata = {"content": f"Logged <t:{getTimeStamp()}:R>","username": "AutoMod","embeds": [embed],}
-				postWebhook(webhook_mods, whdata)
-				return
+		possible_messages = Homoglyphs().to_ascii(message)
+		for message in possible_messages:
+			for word in message.split():
+				if word in slurlist:
+					message = str(message).replace(word,f"*{word}*")
+					embed = {"description": "","title": "Bad word detected!", "fields" : [{"name" : "Username", "value" : f"{username}"}, {"name" : "Canvas", "value" : f"{canvas}"}, {"name" : "Message", "value" : f"{message}"}, {"name" : "Detected Word", "value" : f"{word}"}], "color": 14662147} #yellow
+					whdata = {"content": f"Logged <t:{getTimeStamp()}:R>","username": "AutoMod","embeds": [embed],}
+					postWebhook(webhook_mods, whdata)
+					return
 
 def getTimeStamp():
 	return str(time.time()).split(".")[0]
