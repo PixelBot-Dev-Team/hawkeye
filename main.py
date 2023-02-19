@@ -241,7 +241,7 @@ def logChat13(data):
 	#### Toxic Code below
 	with contextlib.suppress(Exception):
 		fuckYou = requests.get(f"https://pixelplace.io/api/get-user.php?username={messageUsername}").json()[f"guild_rank_{requests.get(f'https://pixelplace.io/api/get-user.php?username={messageUsername}').json()['guild_rank']}_title"]
-	discordGuildTitle = "" if messageGuild == "" else f"- ({fuckYou})"
+	discordGuildTitle = "" if messageGuild == "" else f" - ({fuckYou})"
 	#### Toxic Code over
 	messageMentionInsert = (f"Mentioned people: {messageMention}" if messageMention != "" else "")
 	discordMessage = f"""
