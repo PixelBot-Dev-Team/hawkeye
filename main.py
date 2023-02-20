@@ -333,7 +333,7 @@ def postItemUse(data):
 @socketconnection7.on("area_fight_start")
 @background
 def postWarStart(data):
-	warType = "Player war" if data["fightType"] else "Guild war"
+	warType = "Player" if data["fightType"] else "Guild"
 	area = warAreas[data["id"]]
 	endTime = int(data["fightEndAt"])
 	embed = {"description": "","title": f"A new {warType} war has started!", "fields" : [{"name" : "Area", "value" : f"{area}"}, {"name" : "End", "value" : f"<t:{endTime}:R>"}], "color": 15158332}
