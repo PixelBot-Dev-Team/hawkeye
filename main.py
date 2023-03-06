@@ -361,12 +361,13 @@ def postWarEnd(data):
 
 def checkChatMessage(message,username,canvas):
 	with open(f"{CurrentDir}/filter.txt",'r') as file:
+		org_message = message
 		slurlist = file.read().splitlines()
 		possible_messages = Homoglyphs().to_ascii(message)
 		for message in possible_messages:
 			for word in message.split():
 				if word in slurlist:
-					message = str(message).replace(word,f"*{word}*")
+					message = str(org_message).replace(word,f"*{word}*")
 					embed = {"description": "","title": "Bad word detected!", "fields" : [{"name" : "Username", "value" : f"{username}"}, {"name" : "Canvas", "value" : f"{canvas}"}, {"name" : "Message", "value" : f"{message}"}, {"name" : "Detected Word", "value" : f"{word}"}], "color": 14662147} #yellow
 					whdata = {"content": f"Logged <t:{getTimeStamp()}:R>","username": "AutoMod","embeds": [embed],}
 					postWebhook(webhook_mods, whdata)
