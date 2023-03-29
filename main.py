@@ -108,9 +108,8 @@ def logChat7(data):
 		x = data["posX"]
 		y = data["posY"]
 		zoom = data["posS"]
-		insert = f"(x:{x},y:{y},zoom:{zoom})"
-		message = f"""{message} | /here Coords:{insert}
-[Take me there!](https://pixelplace.io/7#x={x}&y={y}&s={zoom})"""
+		message = f"""{message}
+/here: [Take me there!](https://pixelplace.io/7#x={x}&y={y}&s={zoom})"""
 	except KeyError:
 		# There just arent coords / the message doesent include /here
 		pass
@@ -171,9 +170,8 @@ def logChat8(data):
 		x = data["posX"]
 		y = data["posY"]
 		zoom = data["posS"]
-		insert = f"(x:{x},y:{y},zoom:{zoom})"
-		message = f"""{message} | /here Coords:{insert}
-[Take me there!](https://pixelplace.io/8#x={x}&y={y}&s={zoom})"""
+		message = f"""{message}
+/here: [Take me there!](https://pixelplace.io/8#x={x}&y={y}&s={zoom})"""
 	except KeyError:
 		# There just arent coords / the message doesent include /here
 		pass
@@ -226,9 +224,8 @@ def logChat13(data):
 		x = data["posX"]
 		y = data["posY"]
 		zoom = data["posS"]
-		insert = f"(x:{x},y:{y},zoom:{zoom})"
-		message = f"""{message} | /here Coords:{insert}
-[Take me there!](https://pixelplace.io/13#x={x}&y={y}&s={zoom})"""
+		message = f"""{message}
+/here: [Take me there!](https://pixelplace.io/13#x={x}&y={y}&s={zoom})"""
 	except KeyError:
 		# There just arent coords / the message doesent include /here
 		pass
@@ -324,7 +321,7 @@ def postItemUse(data):
 	canvas = data["painting"]
 	x = data["x"]
 	y = data["y"]
-	zoom = data["zoom"]
+	zoom = 11.55
 	color = data["c"] # pp id
 	embed = {"description": f"[Take me there!](https://pixelplace.io/{canvas}#x={x}&y={y}&s={zoom})","title": f"{item} used!", "fields" : [{"name" : "Username", "value" : f"{user}"}, {"name" : "X", "value" : f"{x}"}, {"name" : "Y", "value" : f"{y}"}], "color": 1752220}
 	whdata = {"content": f"Logged <t:{getTimeStamp()}:R>","username": "Item usage Logs","embeds": [embed],}
