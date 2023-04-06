@@ -23,6 +23,7 @@ webhook_CoinIslandNotif = "https://discord.com/api/webhooks/1069671531539603477/
 webhook_ItemLogs = "https://discord.com/api/webhooks/1069693721014190131/5W6y8OUesWPe2IAEykdowVnpaRl9Wyc_UfWEC6mtECb9t_At1S-G7ET0yq9Z770HOQnq"
 webhook_WarNotifs = "https://discord.com/api/webhooks/1070057490009567233/qKMUIhEhnTV3L06sYaUzdCMLAyUimJg1vbQl_i-rekC7wQozod_avxnY8fBCGo8o30ms"
 webhook_Owmince = "https://discord.com/api/webhooks/1076649651240964157/Zg796VAvk7h2cmNAVt0hO0desZZJc6Um-6DZAHSznz9T8V3YfiSXf7BDu9puXemIFTQQ"
+webhook_uptime = "https://discord.com/api/webhooks/1093525126416433212/IlM0QqY_5wzKvC8FrkC_zuu24fKKMnRsfvDe2y_ojJkLZT2Qu6UORgsi6couEAWMBK5R"
 
 CoinIsland_roles = {0:"<@&1069696793702584320>",1:"<@&1069696820730667120>",2:"<@&1069696859012083762>",3:"<@&1069696893585719367>",}
 
@@ -44,6 +45,7 @@ global socketconnection13
 socketconnection13 = socketio.Client(reconnection=True, logger=False, engineio_logger=False)
 socketconnection13.connect("https://pixelplace.io/socket.io/", transports='websocket', namespaces=["/",])
 socketconnection13.emit(event='init', data={"authId":"Hawkeye13","boardId":13})
+
 
 @socketconnection7.on("throw.error")
 def error7(data):
@@ -390,7 +392,13 @@ def getIcons(icons):
 
 def postWebhook(url, data):
 	requests.post(url, json=data)
-	time.sleep(1)
+	time.sleep(0.3)
+
+#restart notif
+discordRelativeTimestamp = f"Logged <t:{getTimeStamp()}:R>"
+embed = {"description":"Restarted!","title":"New Event!","color":1146986}
+whdata = {"content": f"{discordRelativeTimestamp}","username": "Uptime Notif","embeds": [embed],}
+postWebhook(webhook_uptime,whdata)
 
 while True:
 	input("Press Ctrl + c to end")
