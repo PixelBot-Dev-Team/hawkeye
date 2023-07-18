@@ -393,7 +393,7 @@ def scrape_twitch_chat(channel):
 					"username": "ttv/owmince Log",
 					"embeds": [embed],
 				}
-				postWebhook(webhook_twitch)
+				postWebhook(webhook_twitch,whdata)
 
 # Helper Methods
 
