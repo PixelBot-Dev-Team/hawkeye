@@ -2,11 +2,13 @@
 import contextlib
 import datetime
 import pathlib
+import socket
 import threading
 import time
 import socketio
 import requests
 from homoglyphs import Homoglyphs
+import re
 
 CurrentDir = pathlib.Path(__file__).parent.absolute()
 
@@ -24,6 +26,7 @@ webhook_ItemLogs = "https://discord.com/api/webhooks/1069693721014190131/5W6y8OU
 webhook_WarNotifs = "https://discord.com/api/webhooks/1070057490009567233/qKMUIhEhnTV3L06sYaUzdCMLAyUimJg1vbQl_i-rekC7wQozod_avxnY8fBCGo8o30ms"
 webhook_Owmince = "https://discord.com/api/webhooks/1076649651240964157/Zg796VAvk7h2cmNAVt0hO0desZZJc6Um-6DZAHSznz9T8V3YfiSXf7BDu9puXemIFTQQ"
 webhook_uptime = "https://discord.com/api/webhooks/1093525126416433212/IlM0QqY_5wzKvC8FrkC_zuu24fKKMnRsfvDe2y_ojJkLZT2Qu6UORgsi6couEAWMBK5R"
+webhook_twitch = "https://discord.com/api/webhooks/1130891689029021759/lgRnuvKF3K95MFhpyHy1i3S-PguSOlLQzzTyGdr_aTH8p-brQk91gLaYjWa3IUVqaJ1g"
 
 CoinIsland_roles = {0:"<@&1069696793702584320>",1:"<@&1069696820730667120>",2:"<@&1069696859012083762>",3:"<@&1069696893585719367>",}
 
@@ -205,6 +208,8 @@ def logChat8(data):
 		postWebhook(webhook_Owmince, whdata)
 	checkChatMessage(message, messageUsername,8)
 
+
+
 @socketconnection13.on("chat.user.message")
 @background
 def logChat13(data):
@@ -356,6 +361,40 @@ def postWarEnd(data):
 	whdata = {"content": f"Logged <t:{getTimeStamp()}:R>","username": "War logs","embeds": [embed],}
 	postWebhook(webhook_WarNotifs, whdata)
 
+#Twitch Chat
+def scrape_twitch_chat(channel):
+	server = 'irc.chat.twitch.tv'
+	port = 6667
+	nickname = 'justinfan12345'
+
+	irc_socket = socket.socket()
+	irc_socket.connect((server, port))
+	irc_socket.send(f'PASS {nickname}\r\n'.encode('utf-8'))
+	irc_socket.send(f'NICK {nickname}\r\n'.encode('utf-8'))
+	irc_socket.send(f'JOIN #{channel}\r\n'.encode('utf-8'))
+
+	while True:
+		message = irc_socket.recv(2048).decode('utf-8')
+		ping_data = re.search(r"PING :tmi\.twitch\.tv", message)
+		if ping_data:
+			response = ping_data.group(0).split(":")[1]
+			irc_socket.send(bytes("PONG " + response + "\r\n", "UTF-8"))
+		if not message.startswith(":tmi.twitch.tv") and not message.startswith(":justinfan12345") and not message.startswith("PING"):
+			if "#owmince" in message:
+				username = message.split("!")[0][1:].strip()
+				text = message.split("#owmince :")[1]
+				discordRelativeTimestamp = f"Logged <t:{getTimeStamp()}:R>"
+				discordMessage = f"""
+					{text}
+				"""
+				embed = {"description": f"{discordMessage}","title": f"{username}"}
+				whdata = {
+					"content": f"{discordRelativeTimestamp}",
+					"username": "ttv/owmince Log",
+					"embeds": [embed],
+				}
+				postWebhook(webhook_twitch)
+
 # Helper Methods
 
 def checkChatMessage(message,username,canvas):
@@ -399,6 +438,9 @@ discordRelativeTimestamp = f"Logged <t:{getTimeStamp()}:R>"
 embed = {"description":"Restarted!","title":"New Event!","color":1146986}
 whdata = {"content": f"{discordRelativeTimestamp}","username": "Uptime Notif","embeds": [embed],}
 postWebhook(webhook_uptime,whdata)
+
+twitch_thread = threading.Thread(target=scrape_twitch_chat,args=["owmince"],daemon=True)
+twitch_thread.start()
 
 while True:
 	input("Press Ctrl + c to end")

@@ -3,15 +3,15 @@ import sys, os, time, threading, subprocess, fnmatch, pathlib
 CurrentDir = pathlib.Path(__file__).parent.absolute()
 
 class SourceChangeMonitor(threading.Thread):
-                                                                                      
+
         _process = None
-                                                           
+
         POLL_INTERVAL = 3
 
         FILE_PATTERN = r"[!.]*.py"
-                                                 
+
         ROOT_DIRECTORY = CurrentDir
-                                                                                       
+
         PROGRAM = r"main.py"
 
         #initialize timed restart
@@ -54,8 +54,8 @@ class SourceChangeMonitor(threading.Thread):
                                             self.nextRestart = time.time() + 3600
 
         def get_files(self):
-                """                                                                                                          
-                Get a list of all files along with their timestamps for last modified                                        
+                """
+                Get a list of all files along with their timestamps for last modified
                 """
                 files = []
                 for root, dirnames, filenames in os.walk(self.ROOT_DIRECTORY):
@@ -63,10 +63,10 @@ class SourceChangeMonitor(threading.Thread):
                                 full_filename = os.path.join(root, filename)
                                 files.append(full_filename)
 
-                # Attach the last modified dates                                                                             
+                # Attach the last modified dates
                 files = [(f, os.stat(f).st_mtime) for f in  files]
 
-                # Don't include this script                                                                                  
+                # Don't include this script
                 files = [f for f in files if  f[0] != self.this_script_name]
                 return list(files)
 
