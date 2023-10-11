@@ -1,0 +1,2 @@
+new auction
+auction ended
