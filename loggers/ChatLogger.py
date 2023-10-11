@@ -7,7 +7,6 @@ from socketio import Client
 
 from lib.util import background, getBadgeDict, getTimeStamp, postWebhook
 
-
 class ChatLogger:
 	def __init__(self, canvas:int, WH_URL:str, startTime, checkMessage:bool = True, owminceCheck:bool = True, non_eng_overwrite = False) -> None:
 		# Setup Connection
@@ -109,6 +108,15 @@ Mentions: {self.CM_Mentions}"""
 			whdata = {"content": f"Logged <t:{getTimeStamp()}:R> || <@&1069701352479010846> ||","username": "HawkEye (Mute Logs)","embeds": [embed],}
 			postWebhook("webhook_mutes_PLACEHOLDER", whdata)
 
+		@socketConnection.on("canvas.alert")
+		@background
+		def logAlerts(message):
+			if self.canvas == 7:
+				return
+			embed = {"title": "New Canvas Alert!","description": f"{message}",} 
+			whdata = {"content": f"Logged <t:{getTimeStamp()}:R> || <@&1069701352479010846> ||","username": "HawkEye (Alert Logs)","embeds": [embed],}
+			postWebhook("webhook_alert_PLACEHOLDER", whdata)
+			
 	# Helper #
 
 	def checkMessage(self,adjusted_message) -> None:
