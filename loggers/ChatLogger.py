@@ -8,7 +8,7 @@ from socketio import Client
 from lib.util import background, getBadgeDict, getTimeStamp, postWebhook
 
 class ChatLogger:
-	def __init__(self, canvas:int, WH_URL:str, startTime, checkMessage:bool = True, owminceCheck:bool = True, non_eng_overwrite = False) -> None:
+	def __init__(self, canvas:int, WH_CHAT_URL:str, WH_OWMINCE_URL:str, WH_MUTE_URL:str, WH_ALERT_URL:str, WH_FILTER_URL:str, startTime, checkMessage:bool = True, owminceCheck:bool = True, non_eng_overwrite = False) -> None:
 		# Setup Connection
 		self.canvas = canvas
 		socketConnection = Client(reconnection=True, logger=False, engineio_logger=False)
@@ -87,11 +87,11 @@ Mentions: {self.CM_Mentions}"""
 			}
 			# Message is completely processed. Time for other checks
 			if owminceCheck and self.CM_Username.lower() == "owmince":
-				postWebhook("WH_URL_OWMINCE_PLACEHOLDER",whdata)
+				postWebhook(WH_OWMINCE_URL,whdata)
 			if checkMessage:
-				checkingThread = threading.Thread(target=self.checkMessage,args=[self.CM_Message],daemon=True).start()
+				checkingThread = threading.Thread(target=self.checkMessage,args=[self.CM_Message,WH_FILTER_URL],daemon=True).start()
 			# Webhook stuff
-			postWebhook(WH_URL,whdata)
+			postWebhook(WH_CHAT_URL,whdata)
 
 		@socketConnection.on("chat.system.delete")
 		@background
@@ -100,13 +100,17 @@ Mentions: {self.CM_Mentions}"""
 			if self.canvas == 7:
 				return
 			rich_data = requests.get(f"https://pixelplace.io/api/get-user.php?username={data}").json()
-			userCanvasId = rich_data["canvas"]	
+			userCanvasId = rich_data["canvas"]
+			badges = str(rich_data["othersIcons"]).split(",").append(rich_data["premiumIcon"])
+			if rich_data["vip"]:
+				badges.append("vip")
+			final_badges = ''.join([getBadgeDict()[badge] for badge in badges])	
 			embed = {"description": "",
 					 "title": "Chat Mute detected!", 
 					 "thumbnail":{"url": f"https://pixelplace.io/canvas/{userCanvasId}.png","height": 0,"width": 0},
-					 "fields" : [{"name" : "Muted User", "value" : f"{data}"}], "color": 2123412}
+					 "fields" : [{"name" : "Muted User", "value" : f"{data}{final_badges}"}], "color": 2123412}
 			whdata = {"content": f"Logged <t:{getTimeStamp()}:R> || <@&1069701352479010846> ||","username": "HawkEye (Mute Logs)","embeds": [embed],}
-			postWebhook("webhook_mutes_PLACEHOLDER", whdata)
+			postWebhook(WH_MUTE_URL, whdata)
 
 		@socketConnection.on("canvas.alert")
 		@background
@@ -115,11 +119,11 @@ Mentions: {self.CM_Mentions}"""
 				return
 			embed = {"title": "New Canvas Alert!","description": f"{message}",} 
 			whdata = {"content": f"Logged <t:{getTimeStamp()}:R> || <@&1069701352479010846> ||","username": "HawkEye (Alert Logs)","embeds": [embed],}
-			postWebhook("webhook_alert_PLACEHOLDER", whdata)
+			postWebhook(WH_ALERT_URL, whdata)
 			
 	# Helper #
 
-	def checkMessage(self,adjusted_message) -> None:
+	def checkMessage(self,adjusted_message,WH_FILTER_URL) -> None:
 		with open("./lib/filter.txt",'r') as filter_file:
 			original_message = adjusted_message
 			slurlist = filter_file.read().splitlines()
@@ -130,7 +134,7 @@ Mentions: {self.CM_Mentions}"""
 						adjusted_message = str(original_message).replace(word,f"**{word}**")
 						embed = {"description": "","title": "Violation detected!", "fields" : [{"name" : "Username", "value" : self.CM_Username}, {"name" : "Canvas", "value" : self.canvas}, {"name" : "Message", "value" : f"{adjusted_message}"}, {"name" : "Detected Word", "value" : f"{word}"}], "color": 14662147} #yellow
 						whdata = {"content": f"Logged <t:{getTimeStamp()}:R>","username": "HawkEye (AutoMod)","embeds": [embed],}
-						postWebhook("WH_URL_MOD_PLACEHOLDER", whdata)
+						postWebhook(WH_FILTER_URL, whdata)
 						break
 				
 	def messageIsOld(self,data, startTime):

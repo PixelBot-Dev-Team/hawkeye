@@ -40,5 +40,23 @@ def getBadgeDict() -> dict[str, str]:
 	"bread":"<:L_bread:1161667293118472302>",
 	"snowball":"<:L_snowball:1161667271983378563>",
 	"vip":"<:L_vip:1161667274743226519>",
-	"":""
+	"":"",
+	None:""
+}
+
+def getItemDict():
+	return {
+	1:["Pixel Missile",".png"],
+	2:["Pixel Bomb",".png"],
+	3:["Atmic Bomb",".png"],
+	4:["Premium (1 Month)",".png"],
+	5:["Premium (1 Year)",".png"],
+	6:["Rainbow Username",".gif"],
+	7:["Guild Bomb",".png"],
+	8:["Avatar Bomb",".png"],
+	9:["Name Change",".png"],
+	10:["XMAS Username",".gif"],
+	11:["Premium (3 Days)",".png"],
+	12:["HALLOWEEN Username",".gif"],
+	13:["Treasure Chest",".png"],
 	}

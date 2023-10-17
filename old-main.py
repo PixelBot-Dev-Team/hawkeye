@@ -278,8 +278,7 @@ def postChatStats(data):
 def postJoins(data):
 	if data == "":
 		return
-	content = f"{data} joined!"
-	embed = {"description": f"{content}","title": "Joins", "color": 2531122} #green
+	embed = {"description": f"{data} joined!","title": "Joins", "color": 2531122} #green
 	whdata = {"content": f"Logged <t:{getTimeStamp()}:R>","username": "On/Off Logs","embeds": [embed],}
 	postWebhook(webhook_onoff, whdata)
 
