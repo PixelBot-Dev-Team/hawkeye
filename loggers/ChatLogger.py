@@ -118,7 +118,7 @@ Mentions: {self.CM_Mentions}"""
 			if self.canvas == 7:
 				return
 			embed = {"title": "New Canvas Alert!","description": f"{message}",} 
-			whdata = {"content": f"Logged <t:{getTimeStamp()}:R> || <@&1069701352479010846> ||","username": "HawkEye (Alert Logs)","embeds": [embed],}
+			whdata = {"content": f"Logged <t:{getTimeStamp()}:R>","username": "HawkEye (Alert Logs)","embeds": [embed],}
 			postWebhook(WH_ALERT_URL, whdata)
 			
 	# Helper #

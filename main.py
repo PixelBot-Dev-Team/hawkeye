@@ -5,6 +5,8 @@ from socketio import Client
 from loggers.ChatLogger import ChatLogger
 from loggers.MiscLogger import MiscLogger
 from loggers.ItemLogger import ItemLogger
+from loggers.CoinIslandLogger import CoinIslandLogger
+from loggers.WarLogger import WarLogger
 
 masterConnection = Client(reconnection=True, logger=False, engineio_logger=False)
 masterConnection.connect("https://pixelplace.io/socket.io/", transports='websocket', namespaces=["/",])
@@ -23,6 +25,11 @@ startTime = datetime.datetime.utcnow()
 # Item Use, Item Gift
 # ItemLogger = ItemLogger(masterConnection,"WH_GIFT","WH_ITEMUSE")
 
+# Coins Island owner change
+# CoinIslandLogger = CoinIslandLogger(masterConnection, "WH_CICHANGE")
+
+# war start and end
+# WarLogger = WarLogger(masterConnection,"WH_WAR_URL")
 
 input("CTRL + C TO EXIT")
 exit()
