@@ -22,7 +22,7 @@ class AuctionLogger:
 
 		@socketConnection.on("auction.new.bid")
 		@background
-		def logNewAuctionBid():
+		def logNewAuctionBid(data):
 			# set data 
 			ED_AUCTION_ID = data["id"]
 			ED_AUCTION_EXPIRES = data["auction_expire_time"]
