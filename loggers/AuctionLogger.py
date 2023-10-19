@@ -23,7 +23,6 @@ class AuctionLogger:
 		@socketConnection.on("auction.new.bid")
 		@background
 		def logNewAuctionBid():
-			data = {"id":30,"owner_id":246777,"owner_username":"Art","under_auction":1,"painting_id":81996,"author_id":174569,"author_username":"DrugToweI","author_icons":"","frame_id":1,"gems_id":1,"current_bid":400,"current_bid_user_id":318520,"current_bid_username":"Dfghfgds","auction_expire_time":1697046604,"bids":1,"sp":0,"bg":0,"burned":0,"created_at":1696361440,"previous_bidder":0}
 			# set data 
 			ED_AUCTION_ID = data["id"]
 			ED_AUCTION_EXPIRES = data["auction_expire_time"]
