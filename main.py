@@ -7,6 +7,8 @@ from loggers.MiscLogger import MiscLogger
 from loggers.ItemLogger import ItemLogger
 from loggers.CoinIslandLogger import CoinIslandLogger
 from loggers.WarLogger import WarLogger
+from loggers.TwitchLogger import TwitchLogger
+from loggers.AuctionLogger import AuctionLogger
 
 masterConnection = Client(reconnection=True, logger=False, engineio_logger=False)
 masterConnection.connect("https://pixelplace.io/socket.io/", transports='websocket', namespaces=["/",])
@@ -30,6 +32,12 @@ startTime = datetime.datetime.utcnow()
 
 # war start and end
 # WarLogger = WarLogger(masterConnection,"WH_WAR_URL")
+
+# Owmince twitch chat
+# TwitchLogger = TwitchLogger("owmince","WH_TWITCH_URL")
+
+# New Auction/bid, ending auction
+AuctionLogger = AuctionLogger(masterConnection,"WH_AUCTION_URL")
 
 input("CTRL + C TO EXIT")
 exit()

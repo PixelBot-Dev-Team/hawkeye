@@ -3,7 +3,7 @@ import requests
 from lib.util import background, getBadgeDict ,getTimeStamp, postWebhook
 
 class CoinIslandLogger:
-	def __init__(self, master_connection, WH_CICHANGE_URL) -> None:
+	def __init__(self, master_connection, WH_CICHANGE_URL:str) -> None:
 		socketConnection = master_connection
 
 		CoinIsland_roles = {
@@ -42,5 +42,5 @@ class CoinIslandLogger:
 			if usernameInsert != "":
 				usernameInsert = " ("+usernameInsert+")"
 			embed = {"description": "","title": f"Coin Island {islandId} has a new Owner", "fields" : [{"name" : "New Owner", "value" : f"{newOwner}{final_badges}{usernameInsert}"}, {"name" : "Coins gained", "value" : f"{coinsGained}"}], "color": 12745742, "thumbnail":{"url": f"https://pixelplace.io/canvas/{canvasId}.png","height": 0,"width": 0}} #yellow
-			whdata = {"content": f"Logged <t:{getTimeStamp()}:R> || {ping} ||","username": "Coin Island Logs","embeds": [embed],}
+			whdata = {"content": f"Logged <t:{getTimeStamp()}:R> || {ping} ||","username": "HawkEye (Coin Island Logs)","embeds": [embed],}
 			postWebhook(WH_CICHANGE_URL, whdata)
