@@ -16,6 +16,8 @@ masterConnection.emit(event='init', data={"authId":f"HawkEye (Master Connection)
 
 startTime = datetime.datetime.utcnow()
 
+# TODO | Do some .env stuff
+
 # GlobalLog = ChatLogger(7,"PLACEHOLDER",startTime,)
 # NonEngLog = ChatLogger(7,"PLACEHOLDER",startTime,non_eng_overwrite=True)
 # AnarchyLog = ChatLogger(13,"PLACEHOLDER",startTime,checkMessage=False)
@@ -37,7 +39,7 @@ startTime = datetime.datetime.utcnow()
 # TwitchLogger = TwitchLogger("owmince","WH_TWITCH_URL")
 
 # New Auction/bid, ending auction
-AuctionLogger = AuctionLogger(masterConnection,"WH_AUCTION_URL")
+# AuctionLogger = AuctionLogger(masterConnection,"WH_AUCTION_URL")
 
 input("CTRL + C TO EXIT")
 exit()
