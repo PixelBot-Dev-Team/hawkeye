@@ -28,7 +28,7 @@ class ChatLogger:
 			if non_eng_overwrite and self.CM_Channel != "nonenglish":
 				return
 			# Return noneng message if non eng overwrite is off
-			elif not non_eng_overwrite and self.CM_Channel != "global":
+			elif not non_eng_overwrite and self.CM_Channel == 7 and self.CM_Channel != "global":
 				return
 			self.CM_Username:str = data["username"]
 			self.CM_Mentions:str = data["mention"]
