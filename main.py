@@ -52,5 +52,5 @@ TwitchLogger = TwitchLogger("owmince",WH_DICT["WH_TWITCH_URL"])
 # New Auction/bid, ending auction
 AuctionLogger = AuctionLogger(masterConnection,WH_DICT["WH_AUCTION_URL"])
 
-input("CTRL + C TO EXIT")
-exit()
+while True:
+	time.sleep(10)
