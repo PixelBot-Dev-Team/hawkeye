@@ -29,10 +29,10 @@ while not connected:
 
 startTime = datetime.datetime.utcnow()
 
-GlobalLog = ChatLogger(7,WH_DICT["WH_GLOBAL_URL"],startTime,)
-NonEngLog = ChatLogger(7,WH_DICT["WH_NONENG_URL"],startTime,non_eng_overwrite=True)
-AnarchyLog = ChatLogger(13,WH_DICT["WH_ANARCH_URL"],startTime,checkMessage=False)
-MVPLog = ChatLogger(8,WH_DICT["WH_MVP_URL"],startTime)
+GlobalLog = ChatLogger(7,WH_DICT["WH_GLOBAL_URL"],WH_DICT["WH_OWMINCE_URL"],WH_DICT["WH_MUTE_URL"],WH_DICT["WH_ALERT_URL"],WH_DICT["WH_MOD_URL"],startTime,)
+NonEngLog = ChatLogger(7,WH_DICT["WH_NONENG_URL"],WH_DICT["WH_OWMINCE_URL"],WH_DICT["WH_MUTE_URL"],WH_DICT["WH_ALERT_URL"],WH_DICT["WH_MOD_URL"],startTime,non_eng_overwrite=True)
+AnarchyLog = ChatLogger(13,WH_DICT["WH_ANARCH_URL"],WH_DICT["WH_OWMINCE_URL"],WH_DICT["WH_MUTE_URL"],WH_DICT["WH_ALERT_URL"],WH_DICT["WH_MOD_URL"],startTime,checkMessage=False)
+MVPLog = ChatLogger(8,WH_DICT["WH_MVP_URL"],WH_DICT["WH_OWMINCE_URL"],WH_DICT["WH_MUTE_URL"],WH_DICT["WH_ALERT_URL"],WH_DICT["WH_MOD_URL"],startTime)
 
 # Chat Stats, Mutes, Announcements, Alerts, Join Leave, 
 MiscLogger = MiscLogger(masterConnection,WH_DICT["WH_MUTE_URL"],WH_DICT["WH_ANNOUNCE_URL"],WH_DICT["WH_ALERT_URL"],WH_DICT["WH_ONOFF_URL"],WH_DICT["WH_STATS_URL"])
