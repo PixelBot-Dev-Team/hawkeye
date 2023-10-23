@@ -36,7 +36,6 @@ class WarLogger:
 		@socketConnection.on("area_fight_end")
 		@background
 		def logWarEnd(data):
-			print(data)
 			warInfo = warAreas[data["id"]]			
 			area = warInfo[0]
 			x = warInfo[1][0]
