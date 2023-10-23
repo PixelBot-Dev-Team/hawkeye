@@ -53,7 +53,6 @@ class AuctionLogger:
 		@socketConnection.on("auction.notification.win")
 		@background
 		def logAuctionWin(data):
-			data = {"id":96,"owner_id":121932,"owner_username":"HappyKlw","under_auction":0,"painting_id":81818,"author_id":7557,"author_username":"CaptainWinky","author_icons":"1-year,nitro,bread,art-dealer-3,gifter,vip","frame_id":3,"gems_id":2,"current_bid":450,"current_bid_user_id":121932,"current_bid_username":"HappyKlw","auction_expire_time":0,"bids":3,"sp":3,"bg":5,"burned":0,"created_at":1696784347}
 			ED_AUCTION_ID = data["id"]
 			ED_AUCTION_OWNER_BADGES = data["author_icons"]
 			ED_AUCTION_OWNER_NAME = data["author_username"]
