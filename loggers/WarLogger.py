@@ -29,6 +29,7 @@ class WarLogger:
 			s = warInfo[1][2]
 			endTime = int(data["fightEndAt"])
 			embed = {"description": "","title": f"A new {warType} war has started!", "fields" : [{"name" : "Area", "value" : f"[{area}](https://pixelplace.io/7-pixels-world-war#x={x}&y={y}&s={s})"}, {"name" : "End", "value" : f"<t:{endTime}:R>"}], "color": 15158332}
+			#                                                       {      Wars Ping      }
 			whdata = {"content": f"Logged <t:{getTimeStamp()}:R> || <@&1069696750060838942> ||","username": "HawkEye (War Logs)","embeds": [embed],}
 			postWebhook(WH_WAR_URL, whdata)
 

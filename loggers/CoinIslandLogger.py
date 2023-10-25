@@ -1,6 +1,4 @@
-import requests
-
-from lib.util import background, getBadgeDict ,getTimeStamp, postWebhook
+from lib.util import background ,getTimeStamp, postWebhook, getProfileData
 
 class CoinIslandLogger:
 	def __init__(self, master_connection, WH_CICHANGE_URL:str) -> None:
@@ -19,28 +17,15 @@ class CoinIslandLogger:
 			newOwner = data["from"]
 			coinsGained = data["amount"]
 			islandId = data["island"]
-			ping = CoinIsland_roles[islandId]
-			rich_data = requests.get(f"https://pixelplace.io/api/get-user.php?username={newOwner}").json()
-			canvasId = rich_data["canvas"]
-			try:
-				badges = str(rich_data["othersIcons"]).split(",")
-				badges.append(rich_data["premiumIcon"])
-				if rich_data["vip"]:
-					badges.append("vip")
-				final_badges = ''.join([getBadgeDict()[badge] for badge in badges])	
-			except:
-				final_badges = ""			
-			usernameInsert = ""
-			if RD_golden_profile := bool(rich_data["golden"]):
-				usernameInsert = usernameInsert+"🟨"
-			if RD_Rainbow_name := getTimeStamp() < rich_data["rainbowTime"]:
-				usernameInsert = usernameInsert+"🌈"
-			if RD_Xmas_name := getTimeStamp() < rich_data["xmasTime"]:
-				usernameInsert = usernameInsert+"🎄"
-			if RD_Halloween_name := getTimeStamp() < rich_data["halloweenTime"]:
-				usernameInsert = usernameInsert+"🎃"
-			if usernameInsert != "":
-				usernameInsert = " ("+usernameInsert+")"
-			embed = {"description": "","title": f"Coin Island {islandId} has a new Owner", "fields" : [{"name" : "New Owner", "value" : f"{newOwner}{final_badges}{usernameInsert}"}, {"name" : "Coins gained", "value" : f"{coinsGained}"}], "color": 12745742, "thumbnail":{"url": f"https://pixelplace.io/canvas/{canvasId}.png","height": 0,"width": 0}} #yellow
-			whdata = {"content": f"Logged <t:{getTimeStamp()}:R> || {ping} ||","username": "HawkEye (Coin Island Logs)","embeds": [embed],}
+			coinIslandPing = CoinIsland_roles[islandId]
+			BADGES, PFP_CANVAS_ID, USERNAME_EXTRA, GUILD, GUILD_TITLE, GUILD_DIVIDER = getProfileData(newOwner)	
+			embed = {
+				"title": f"Coin Island {islandId} has a new Owner",
+				"description": "",
+				"thumbnail":{"url": f"https://pixelplace.io/canvas/{PFP_CANVAS_ID}.png","height": 0,"width": 0}, 
+				"fields" : [
+					{"name" : "New Owner", "value" : f"{newOwner}{BADGES}{USERNAME_EXTRA}{GUILD_DIVIDER}{GUILD}{GUILD_DIVIDER}{GUILD_TITLE}"},
+					{"name" : "Coins gained", "value" : f"{coinsGained}"},
+				]}
+			whdata = {"content": f"Logged <t:{getTimeStamp()}:R> || {coinIslandPing} ||","username": "HawkEye (Coin Island Logs)","embeds": [embed]}
 			postWebhook(WH_CICHANGE_URL, whdata)

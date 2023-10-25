@@ -7,16 +7,45 @@ def background(function):
 	A threading decorator. \n
 	use `@background` above the function you want to run in the background.
 	'''
-	def background(*arguments, **keywordArguments):
+	def backgroundFunction(*arguments, **keywordArguments):
 		Thread(target=function, args=arguments, kwargs=keywordArguments , daemon=True).start()
-	return background
+	return backgroundFunction
+
+def getTimeStamp() -> int:
+	"Gets current time as int"
+	return int(str(time.time()).split(".")[0])
+
+def getProfileData(username):
+	profileData = requests.get(f"https://pixelplace.io/api/get-user.php?username={username}").json()
+	PFP_CANVAS_ID:int = profileData["canvas"]
+	badges = str(profileData["othersIcons"]).split(",").append(profileData["premiumIcon"])
+	if profileData["vip"]:
+		badges.append("vip")
+	BADGES:str = ''.join([getBadgeDict()[badge] for badge in badges])
+	GOLDEN_PROFILE:bool = bool(profileData["golden"])
+	IS_RAINBOW_NAME:bool = bool(getTimeStamp() < profileData["rainbowTime"])
+	IS_XMAS_NAME:bool = bool(getTimeStamp() < profileData["xmasTime"])
+	IS_HALLOWEEN_NAME:bool = bool(getTimeStamp() < profileData["halloweenTime"])
+	# Add stuff for golden profiles, rainbow/halloween/xmas names
+	USERNAME_EXTRA:str = "🟨" if GOLDEN_PROFILE else ""
+	USERNAME_EXTRA = f"{USERNAME_EXTRA}🌈" if IS_RAINBOW_NAME else USERNAME_EXTRA
+	USERNAME_EXTRA = f"{USERNAME_EXTRA}🎄" if IS_XMAS_NAME else USERNAME_EXTRA
+	USERNAME_EXTRA = f"({USERNAME_EXTRA}🎃)" if IS_HALLOWEEN_NAME else f"({USERNAME_EXTRA})"
+	
+	if GUILD := profileData["guild"] != "":
+		GUILD_RANK:int = int(profileData["guild_rank"])
+		GUILD_TITLES:dict = {1:profileData["guild_rank_1_title"],2:profileData["guild_rank_2_title"],3:profileData["guild_rank_3_title"]}
+		GUILD_TITLE:str = GUILD_TITLES[GUILD_RANK]
+		GUILD_DIVIDER:str = " - "
+	else:
+		GUILD_DIVIDER:str = ""
+		GUILD_RANK:str = ""
+		GUILD_TITLE:str = ""
+	return BADGES, PFP_CANVAS_ID, USERNAME_EXTRA, GUILD, GUILD_TITLE, GUILD_DIVIDER
 
 def postWebhook(WH_URL, WH_DATA) -> None:
 	requests.post(WH_URL, json=WH_DATA)
 	time.sleep(0.3)
-
-def getTimeStamp() -> int:
-	return int(str(time.time()).split(".")[0])
 
 def getBadgeDict() -> dict[str, str]:
 	return {
@@ -41,7 +70,6 @@ def getBadgeDict() -> dict[str, str]:
 	"snowball":"<:L_snowball:1161667271983378563>",
 	"vip":"<:L_vip:1161667274743226519>",
 	"":"",
-	None:""
 }
 
 def getItemDict():

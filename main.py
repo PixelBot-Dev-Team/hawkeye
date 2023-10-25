@@ -29,10 +29,10 @@ while not connected:
 
 startTime = datetime.datetime.utcnow()
 
-GlobalLog = ChatLogger(7,WH_DICT["WH_GLOBAL_URL"],WH_DICT["WH_OWMINCE_URL"],WH_DICT["WH_MUTE_URL"],WH_DICT["WH_ALERT_URL"],WH_DICT["WH_MOD_URL"],startTime,)
-NonEngLog = ChatLogger(7,WH_DICT["WH_NONENG_URL"],WH_DICT["WH_OWMINCE_URL"],WH_DICT["WH_MUTE_URL"],WH_DICT["WH_ALERT_URL"],WH_DICT["WH_MOD_URL"],startTime,non_eng_overwrite=True)
-AnarchyLog = ChatLogger(13,WH_DICT["WH_ANARCH_URL"],WH_DICT["WH_OWMINCE_URL"],WH_DICT["WH_MUTE_URL"],WH_DICT["WH_ALERT_URL"],WH_DICT["WH_MOD_URL"],startTime,checkMessage=False)
-MVPLog = ChatLogger(8,WH_DICT["WH_MVP_URL"],WH_DICT["WH_OWMINCE_URL"],WH_DICT["WH_MUTE_URL"],WH_DICT["WH_ALERT_URL"],WH_DICT["WH_MOD_URL"],startTime)
+GlobalLog = ChatLogger(startTime,7,WH_DICT["WH_GLOBAL_URL"],WH_DICT["WH_OWMINCE_URL"],WH_DICT["WH_MUTE_URL"],WH_DICT["WH_ALERT_URL"],WH_DICT["WH_MOD_URL"])
+NonEngLog = ChatLogger(startTime,-1,WH_DICT["WH_NONENG_URL"],WH_DICT["WH_OWMINCE_URL"],WH_DICT["WH_MUTE_URL"],WH_DICT["WH_ALERT_URL"],WH_DICT["WH_MOD_URL"])
+AnarchyLog = ChatLogger(startTime,13,WH_DICT["WH_ANARCH_URL"],WH_DICT["WH_OWMINCE_URL"],WH_DICT["WH_MUTE_URL"],WH_DICT["WH_ALERT_URL"],WH_DICT["WH_MOD_URL"])
+MVPLog = ChatLogger(startTime,8,WH_DICT["WH_MVP_URL"],WH_DICT["WH_OWMINCE_URL"],WH_DICT["WH_MUTE_URL"],WH_DICT["WH_ALERT_URL"],WH_DICT["WH_MOD_URL"])
 
 # Chat Stats, Mutes, Announcements, Alerts, Join Leave, 
 MiscLogger = MiscLogger(masterConnection,WH_DICT["WH_MUTE_URL"],WH_DICT["WH_ANNOUNCE_URL"],WH_DICT["WH_ALERT_URL"],WH_DICT["WH_ONOFF_URL"],WH_DICT["WH_STATS_URL"])
@@ -52,5 +52,5 @@ TwitchLogger = TwitchLogger("owmince",WH_DICT["WH_TWITCH_URL"])
 # New Auction/bid, ending auction
 AuctionLogger = AuctionLogger(masterConnection,WH_DICT["WH_AUCTION_URL"])
 
-while True:
+while connected:
 	time.sleep(10)

@@ -1,121 +1,110 @@
-import datetime
-import threading
+from datetime import datetime
+from threading import Thread
 
-import requests
 from homoglyphs import Homoglyphs
 from socketio import Client
 
-from lib.util import background, getBadgeDict, getTimeStamp, postWebhook
+from lib.util import background, getBadgeDict, getTimeStamp, postWebhook, getProfileData
+
+class ChatMessage():
+	def __init__(self,messageData) -> None:
+		self.USERNAME:str = messageData["username"]
+		self.MENTIONS:str = messageData["mention"]
+		self.GUILD:str = messageData["guild"]
+		self.BADGES:list = messageData["icons"]
+		self.TEXT:str = messageData["message"]
+		try:
+			self.HAS_HERE:bool = True
+			self.HERE_COMMAND_X:int = int(messageData["posX"])
+			self.HERE_COMMAND_Y:int = int(messageData["posY"])
+			self.HERE_COMMAND_ZOOM:float = float(messageData["posS"])
+		except KeyError:
+			self.HAS_HERE:bool = False
+		_, self.PFP_CANVAS_ID, self.USERNAME_EXTRA, _, self.GUILD_TITLE, self.GUILD_DIVIDER = getProfileData(self.USERNAME)
+		
+	def getBadgesAsEmotes(self) -> str:
+		return ''.join([getBadgeDict()[badge] for badge in self.BADGES])
 
 class ChatLogger:
-	def __init__(self, canvas:int, WH_CHAT_URL:str, WH_OWMINCE_URL:str, WH_MUTE_URL:str, WH_ALERT_URL:str, WH_FILTER_URL:str, startTime, checkMessage:bool = True, owminceCheck:bool = True, non_eng_overwrite = False) -> None:
+	"""Chat Logger for Pixelplace.io\n
+	Set canvas to `-1` to log non english chat."""
+	def __init__(self, startTime:int, canvas:int, WH_CHAT_URL:str, WH_OWMINCE_URL:str, WH_MUTE_URL:str, WH_ALERT_URL:str, WH_FILTER_URL:str, checkMessagesForSlurs:bool = True, filterOwminceMessages:bool = True) -> None:
+		# Convert data to self.
+		if canvas == -1:
+			self.canvas = 7
+			self.isNonEngLogger = True
+		else:
+			self.canvas = canvas
+		self.checkMessagesForSlurs = checkMessagesForSlurs
+		if self.checkMessagesForSlurs:
+			self.FILTER_FILE:list = open("./lib/filter.txt",'r').read().splitlines()
+		self.filterOwminceMessages = filterOwminceMessages
+		self.startTime = startTime
+		self.WEBHOOKS = {
+			"MESSAGES": WH_CHAT_URL,
+			"OWMINCE" : WH_OWMINCE_URL,
+			"MUTES"   : WH_MUTE_URL,
+			"ALERTS"  : WH_ALERT_URL,
+			"FILTERED": WH_FILTER_URL,
+		}
 		# Setup Connection
-		self.canvas = canvas
 		socketConnection = Client(reconnection=True, logger=False, engineio_logger=False)
 		socketConnection.connect("https://pixelplace.io/socket.io/", transports='websocket', namespaces=["/",])
 		socketConnection.emit(event='init', data={"authId":f"HawkEye Agent (Canvas {self.canvas})","boardId":self.canvas})
 
 		@socketConnection.on("chat.user.message")
 		@background
-		def logChat(data):
-			if self.messageIsOld(data,startTime):
+		def logChat(messageData):
+			# Check if message is valid for Logger Config
+			if self.messageIsValid(messageData):
 				return
-			self.CM_Channel:str = data["channel"]
-			# Return global message is a specific canvas is being logged
-			if self.canvas != 7 and self.CM_Channel != "painting":
-				return
-			# Return global message if non eng overwrite is active
-			if non_eng_overwrite and self.CM_Channel != "nonenglish":
-				return
-			# Return noneng message if non eng overwrite is off
-			elif not non_eng_overwrite and self.CM_Channel == 7 and self.CM_Channel != "global":
-				return
-			self.CM_Username:str = data["username"]
-			self.CM_Mentions:str = data["mention"]
-			self.CM_Guild:str = data["guild"]
-			self.CM_Badges:list = data["icons"]
-			self.CM_Message:str = data["message"] # backup for further processing
-			final_text:str = self.CM_Message
-			# Gather Rich data
-			rich_data = requests.get(f"https://pixelplace.io/api/get-user.php?username={self.CM_Username}").json()
-			try:
-				self.RD_Guild_rank = int(rich_data["guild_rank"])
-				self.RD_Guild_rank_title = {1:rich_data["guild_rank_1_title"],2:rich_data["guild_rank_2_title"],3:rich_data["guild_rank_3_title"] or ""}
-				final_rank_guild = self.RD_Guild_rank_title[self.RD_Guild_rank]
-			except:
-				final_rank_guild = ""
-			self.RD_Profile_canvas = rich_data["canvas"]
-			# Represent stuff like rainbow names etc
-			usernameInsert = ""
-			if RD_golden_profile := bool(rich_data["golden"]):
-				usernameInsert = usernameInsert+"🟨"
-			if RD_Rainbow_name := getTimeStamp() < rich_data["rainbowTime"]:
-				usernameInsert = usernameInsert+"🌈"
-			if RD_Xmas_name := getTimeStamp() < rich_data["xmasTime"]:
-				usernameInsert = usernameInsert+"🎄"
-			if RD_Halloween_name := getTimeStamp() < rich_data["halloweenTime"]:
-				usernameInsert = usernameInsert+"🎃"
-			if usernameInsert != "":
-				usernameInsert = " ("+usernameInsert+")"
-			# Process /here 
-			try:
-				hereCommand_X = data["posX"]
-				hereCommand_Y = data["posY"]
-				hereCommand_Zoom = data["posS"]
-				final_text = f"[[{hereCommand_X},{hereCommand_Y}]](https://pixelplace.io/{self.canvas}#x={hereCommand_X}&y={hereCommand_Y}&s={hereCommand_Zoom})" + final_text
-			except KeyError:
-				pass
+			chatMessageObject = ChatMessage(messageData)
+			# Process /here (if no /here is found it gets set to "")
+			embedText = f"[[{chatMessageObject.HERE_COMMAND_X},{chatMessageObject.HERE_COMMAND_Y}] ](https://pixelplace.io/{self.canvas}#x={chatMessageObject.HERE_COMMAND_X}&y={chatMessageObject.HERE_COMMAND_Y}&s={chatMessageObject.HERE_COMMAND_ZOOM})" if chatMessageObject.HAS_HERE else ""
+			# Process Main text
+			embedText = f"{embedText}{chatMessageObject.TEXT}"
 			# Process Mentions
-			if self.CM_Mentions != "":
-				final_text = f"""{final_text}
-						
-Mentions: {self.CM_Mentions}"""
-			# Process Badges
-			final_badges = ''.join([getBadgeDict()[badge] for badge in self.CM_Badges])			
-			# Process Guild divider
-			final_guild_divider = " - " if self.CM_Guild != "" else ""
-			# Embed stuff
-			embed = {"title": f"{self.CM_Username} {final_badges}{usernameInsert}{final_guild_divider}{self.CM_Guild}{final_guild_divider}{final_rank_guild}",
-				"description": final_text,
-				"thumbnail":{"url": f"https://pixelplace.io/canvas/{self.RD_Profile_canvas}.png","height": 0,"width": 0},
-				"color":"65501",
+			embedText = f"{embedText}\n\n{chatMessageObject.MENTIONS}"			
+			# Create Embed
+			embed = {
+				"title": f"{chatMessageObject.USERNAME}{chatMessageObject.getBadgesAsEmotes()}{chatMessageObject.USERNAME_EXTRA}{chatMessageObject.GUILD_DIVIDER}{chatMessageObject.GUILD}{chatMessageObject.GUILD_DIVIDER}{chatMessageObject.GUILD_TITLE}",
+				"description": embedText,
+				"thumbnail":{"url": f"https://pixelplace.io/canvas/{chatMessageObject.PFP_CANVAS_ID}.png","height": 0,"width": 0},
 			}
-			whdata = {
+			webhookData = {
 				"content": f"Logged <t:{getTimeStamp()}:R>",
 				"username": f"HawkEye (/{self.canvas} logs)",
 				"embeds": [embed],
 			}
+			# Send to normal logs
+			postWebhook(WH_CHAT_URL,webhookData)
 			# Message is completely processed. Time for other checks
-			if owminceCheck and self.CM_Username.lower() == "owmince":
-				postWebhook(WH_OWMINCE_URL,whdata)
-			if checkMessage:
-				checkingThread = threading.Thread(target=self.checkMessage,args=[self.CM_Message,WH_FILTER_URL],daemon=True).start()
-			# Webhook stuff
-			postWebhook(WH_CHAT_URL,whdata)
+			if self.filterOwminceMessages and chatMessageObject.USERNAME.lower() == "owmince":
+				postWebhook(WH_OWMINCE_URL,webhookData)
+			if self.checkMessagesForSlurs:
+				_ = Thread(target=self.checkMessage,args=[chatMessageObject,WH_FILTER_URL],daemon=True).start()
 
 		@socketConnection.on("chat.system.delete")
 		@background
-		def logMutes(data):
-		# Would be cool to later on log messages in a db for a day or smth and lookup the last message of the user
-			if self.canvas == 7:
+		def logMutes(USERNAME):
+			if self.canvas == 7: # These are logged in MiscLogger.py
 				return
-			rich_data = requests.get(f"https://pixelplace.io/api/get-user.php?username={data}").json()
-			userCanvasId = rich_data["canvas"]
-			badges = str(rich_data["othersIcons"]).split(",").append(rich_data["premiumIcon"])
-			if rich_data["vip"]:
-				badges.append("vip")
-			final_badges = ''.join([getBadgeDict()[badge] for badge in badges])	
-			embed = {"description": "",
-					 "title": "Chat Mute detected!", 
-					 "thumbnail":{"url": f"https://pixelplace.io/canvas/{userCanvasId}.png","height": 0,"width": 0},
-					 "fields" : [{"name" : "Muted User", "value" : f"{data}{final_badges}"}], "color": 2123412}
+			BADGES, PFP_CANVAS_ID, USERNAME_EXTRA, GUILD, GUILD_TITLE, GUILD_DIVIDER = getProfileData(USERNAME)
+			embed = {
+				"title": "Chat Mute detected!", 
+				"description": "",
+				"thumbnail":{"url": f"https://pixelplace.io/canvas/{PFP_CANVAS_ID}.png","height": 0,"width": 0},
+				"fields" : [
+					{"name" : "Muted User", "value" : f"{USERNAME}{BADGES}{USERNAME_EXTRA}{GUILD_DIVIDER}{GUILD}{GUILD_DIVIDER}{GUILD_TITLE}"}
+					]}
+			#                                                       {      Mute Role      }
 			whdata = {"content": f"Logged <t:{getTimeStamp()}:R> || <@&1069701352479010846> ||","username": "HawkEye (Mute Logs)","embeds": [embed],}
 			postWebhook(WH_MUTE_URL, whdata)
 
 		@socketConnection.on("canvas.alert")
 		@background
 		def logAlerts(message):
-			if self.canvas == 7:
+			if self.canvas == 7: # These are logged in MiscLogger.py
 				return
 			embed = {"title": "New Canvas Alert!","description": f"{message}",} 
 			whdata = {"content": f"Logged <t:{getTimeStamp()}:R>","username": "HawkEye (Alert Logs)","embeds": [embed],}
@@ -123,20 +112,39 @@ Mentions: {self.CM_Mentions}"""
 			
 	# Helper #
 
-	def checkMessage(self,adjusted_message,WH_FILTER_URL) -> None:
-		with open("./lib/filter.txt",'r') as filter_file:
-			original_message = adjusted_message
-			slurlist = filter_file.read().splitlines()
-			possible_messages = Homoglyphs().to_ascii(adjusted_message)
-			for adjusted_message in possible_messages:
-				for word in adjusted_message.split():
-					if word in slurlist:
-						adjusted_message = str(original_message).replace(word,f"**{word}**")
-						embed = {"description": "","title": "Violation detected!", "fields" : [{"name" : "Username", "value" : self.CM_Username}, {"name" : "Canvas", "value" : self.canvas}, {"name" : "Message", "value" : f"{adjusted_message}"}, {"name" : "Detected Word", "value" : f"{word}"}], "color": 14662147} #yellow
-						whdata = {"content": f"Logged <t:{getTimeStamp()}:R>","username": "HawkEye (AutoMod)","embeds": [embed],}
-						postWebhook(WH_FILTER_URL, whdata)
-						break
+	def checkMessage(self,chatMessageObject:ChatMessage,WH_FILTER_URL:str) -> None:
+		original_message = chatMessageObject.TEXT
+		for message in Homoglyphs()._to_ascii(chatMessageObject.TEXT):
+			for word in message.split():
+				if word in self.FILTER_FILE:
+					newMessageText = str(original_message).replace(word,f"**~~{word}~~**")
+					embed = {
+						"title"      : "Violation detected!",
+						"description": "",
+						"thumbnail":{"url": f"https://pixelplace.io/canvas/{chatMessageObject.PFP_CANVAS_ID}.png","height": 0,"width": 0},
+						"fields"     : [
+							{"name" : "Username", "value" : f"{chatMessageObject.USERNAME}{chatMessageObject.USERNAME_EXTRA}{chatMessageObject.GUILD_DIVIDER}{chatMessageObject.GUILD}{chatMessageObject.GUILD_DIVIDER}{chatMessageObject.GUILD_TITLE}"},
+							{"name" : "Message", "value" : f"{newMessageText}"}, 
+							{"name" : "Detected Word", "value" : f"{word}"},
+							{"name" : "Canvas", "value" : self.canvas}, 
+							]}
+					whdata = {"content": f"Logged <t:{getTimeStamp()}:R>","username": "HawkEye (AutoMod)","embeds": [embed],}
+					postWebhook(WH_FILTER_URL, whdata)
+					return		
 				
-	def messageIsOld(self,data, startTime):
-		messagetime = datetime.datetime.strptime(data["createdAt"], "%Y-%m-%dT%H:%M:%SZ")
-		return messagetime < startTime
+	def messageIsValid(self,messageData, startTime):
+		# Filter out all messages that got sent before the bot started
+		# -> Avoid logging the same message twice
+		messageTime = datetime.strptime(messageData["createdAt"], "%Y-%m-%dT%H:%M:%SZ")
+		if startTime > messageTime:
+			return False
+		# Filter out global messages if the canvas isnt /7
+		if self.canvas != 7 and messageData["channel"] != "painting":
+			return False
+		# Filter out global messages if its logging the nonEng chat 
+		if self.isNonEngLogger and messageData["channel"] != "nonenglish":
+			return False
+		# Filter out nonEng messages if its logging global chat
+		if self.canvas == 7 and not self.isNonEngLogger and messageData["channel"] != "global":
+			return False
+		return True

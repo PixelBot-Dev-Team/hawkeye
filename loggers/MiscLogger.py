@@ -1,6 +1,6 @@
 import requests
 
-from lib.util import background, getBadgeDict ,getTimeStamp, postWebhook
+from lib.util import background, getProfileData ,getTimeStamp, postWebhook
 
 
 class MiscLogger:
@@ -9,28 +9,15 @@ class MiscLogger:
 		
 		@socketConnection.on("chat.system.delete")
 		@background
-		def logMutes(data):
-			rich_data = requests.get(f"https://pixelplace.io/api/get-user.php?username={data}").json()
-			userCanvasId = rich_data["canvas"]
-			badges = str(rich_data["othersIcons"]).split(",").append(rich_data["premiumIcon"])
-			if rich_data["vip"]:
-				badges.append("vip")
-			final_badges = ''.join([getBadgeDict()[badge] for badge in badges])
-			usernameInsert = ""
-			if RD_golden_profile := bool(rich_data["golden"]):
-				usernameInsert = usernameInsert+"🟨"
-			if RD_Rainbow_name := getTimeStamp() < rich_data["rainbowTime"]:
-				usernameInsert = usernameInsert+"🌈"
-			if RD_Xmas_name := getTimeStamp() < rich_data["xmasTime"]:
-				usernameInsert = usernameInsert+"🎄"
-			if RD_Halloween_name := getTimeStamp() < rich_data["halloweenTime"]:
-				usernameInsert = usernameInsert+"🎃"
-			if usernameInsert != "":
-				usernameInsert = " ("+usernameInsert+")"	
+		def logMutes(username):
+			BADGES, PFP_CANVAS_ID, USERNAME_EXTRA, GUILD, GUILD_TITLE, GUILD_DIVIDER = getProfileData(username)		
 			embed = {"description": "",
 					 "title": "Chat Mute detected!", 
-					 "thumbnail":{"url": f"https://pixelplace.io/canvas/{userCanvasId}.png","height": 0,"width": 0},
-					 "fields" : [{"name" : "Muted User", "value" : f"{data}{final_badges}{usernameInsert}"}], "color": 2123412}
+					 "thumbnail":{"url": f"https://pixelplace.io/canvas/{PFP_CANVAS_ID}.png","height": 0,"width": 0},
+					 "fields" : [
+						 {"name" : "Muted User", "value" : f"{username}{BADGES}{USERNAME_EXTRA}{GUILD_DIVIDER}{GUILD}{GUILD_DIVIDER}{GUILD_TITLE}"}
+						 ]}
+			#                                                       {      Mute Ping      }
 			whdata = {"content": f"Logged <t:{getTimeStamp()}:R> || <@&1069701352479010846> ||","username": "HawkEye (Mute Logs)","embeds": [embed],}
 			postWebhook(WH_MUTE_URL, whdata)
 
@@ -50,61 +37,30 @@ class MiscLogger:
 		
 		@socketConnection.on("j")
 		@background
-		def logJoins(data):
-			if data == "":
+		def logJoins(username):
+			if username == "":
 				return
-			rich_data = requests.get(f"https://pixelplace.io/api/get-user.php?username={data}").json()
-			userCanvasId = rich_data["canvas"]
-			try:
-				badges = str(rich_data["othersIcons"]).split(",")
-				badges.append(rich_data["premiumIcon"])
-				if rich_data["vip"]:
-					badges.append("vip")
-				final_badges = ''.join([getBadgeDict()[badge] for badge in badges])	
-			except:
-				final_badges = ""
-			usernameInsert = ""
-			if RD_golden_profile := bool(rich_data["golden"]):
-				usernameInsert = usernameInsert+"🟨"
-			if RD_Rainbow_name := getTimeStamp() < rich_data["rainbowTime"]:
-				usernameInsert = usernameInsert+"🌈"
-			if RD_Xmas_name := getTimeStamp() < rich_data["xmasTime"]:
-				usernameInsert = usernameInsert+"🎄"
-			if RD_Halloween_name := getTimeStamp() < rich_data["halloweenTime"]:
-				usernameInsert = usernameInsert+"🎃"
-			if usernameInsert != "":
-				usernameInsert = " ("+usernameInsert+")"
-			embed = {"description": f"{data}{final_badges}{usernameInsert} joined!","title": "Joins", "color": 2531122, "thumbnail":{"url": f"https://pixelplace.io/canvas/{userCanvasId}.png","height": 0,"width": 0}} #green
+			BADGES, PFP_CANVAS_ID, USERNAME_EXTRA, GUILD, GUILD_TITLE, GUILD_DIVIDER = getProfileData(username)	
+			embed = {
+				"title": "Joins",
+				"description": f"{username}{BADGES}{USERNAME_EXTRA}{GUILD_DIVIDER}{GUILD}{GUILD_DIVIDER}{GUILD_TITLE} joined!",
+				"thumbnail":{"url": f"https://pixelplace.io/canvas/{PFP_CANVAS_ID}.png","height": 0,"width": 0},
+				}
 			whdata = {"content": f"Logged <t:{getTimeStamp()}:R>","username": "HawkEye (Join Logs)","embeds": [embed],}
 			postWebhook(WH_ONOFF_URL, whdata)
 
 		@socketConnection.on("l")
 		@background
-		def logLeaves(data):
-			if data == "":
+		def logLeaves(username):
+			if username == "":
 				return
-			rich_data = requests.get(f"https://pixelplace.io/api/get-user.php?username={data}").json()
-			userCanvasId = rich_data["canvas"]
-			try:
-				badges = str(rich_data["othersIcons"]).split(",")
-				badges.append(rich_data["premiumIcon"])
-				if rich_data["vip"]:
-					badges.append("vip")
-				final_badges = ''.join([getBadgeDict()[badge] for badge in badges])	
-			except:
-				final_badges = ""			
-			usernameInsert = ""
-			if RD_golden_profile := bool(rich_data["golden"]):
-				usernameInsert = usernameInsert+"🟨"
-			if RD_Rainbow_name := getTimeStamp() < rich_data["rainbowTime"]:
-				usernameInsert = usernameInsert+"🌈"
-			if RD_Xmas_name := getTimeStamp() < rich_data["xmasTime"]:
-				usernameInsert = usernameInsert+"🎄"
-			if RD_Halloween_name := getTimeStamp() < rich_data["halloweenTime"]:
-				usernameInsert = usernameInsert+"🎃"
-			if usernameInsert != "":
-				usernameInsert = " ("+usernameInsert+")"
-			embed = {"description": f"{data}{final_badges}{usernameInsert} left!","title": "Leaves", "color": 13571349, "thumbnail":{"url": f"https://pixelplace.io/canvas/{userCanvasId}.png","height": 0,"width": 0}} #red
+			BADGES, PFP_CANVAS_ID, USERNAME_EXTRA, GUILD, GUILD_TITLE, GUILD_DIVIDER = getProfileData(username)	
+			embed = {
+				"title": "Leaves",
+				"description": f"{username}{BADGES}{USERNAME_EXTRA}{GUILD_DIVIDER}{GUILD}{GUILD_DIVIDER}{GUILD_TITLE} left!",
+				"thumbnail":{"url": f"https://pixelplace.io/canvas/{PFP_CANVAS_ID}.png","height": 0,"width": 0},
+				}
+			# embed = {"description": f"{data}{final_badges}{usernameInsert} left!","title": "Leaves", "color": 13571349, "thumbnail":{"url": f"https://pixelplace.io/canvas/{userCanvasId}.png","height": 0,"width": 0}} #red
 			whdata = {"content": f"Logged <t:{getTimeStamp()}:R>","username": "HawkEye (Leave Logs)","embeds": [embed],}
 			postWebhook(WH_ONOFF_URL, whdata)
 					
