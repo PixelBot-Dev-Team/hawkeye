@@ -52,7 +52,9 @@ class WarLogger:
 				return
 			warStats = data["stats"]
 			if data["fightType"]:
-				usernameColumnLength = len(sorted(list([str(entry["username"]) for entry in warStats].append("Username")),key=len)[-1])
+				usernames = [entry["username"] for entry in warStats]
+				usernames.append("Username")
+				usernameColumnLength = len(sorted(usernames,key=len)[-1])
 			pixelsColumnLength = len(sorted([str(entry["pixels"]) for entry in warStats],key=len)[-1])
 			if data["fightType"]:
 				tableText = f"""{str('Username').ljust(usernameColumnLength)} | {str('Guild').center(5)} | {str('px').rjust(pixelsColumnLength)}\n{str("-") * (usernameColumnLength + pixelsColumnLength + 5 + 6)}"""
