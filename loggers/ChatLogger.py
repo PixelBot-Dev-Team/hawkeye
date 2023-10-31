@@ -139,7 +139,7 @@ class ChatLogger:
 		if startTime > messageTime:
 			return False
 		# Filter out global messages if the canvas isnt /7
-		if self.canvas != 7 and messageData["channel"] != "painting":
+		if self.canvas != 7 and messageData["channel"] == "global":
 			return False
 		# Filter out global messages if its logging the nonEng chat 
 		if self.isNonEngLogger and messageData["channel"] != "nonenglish":
