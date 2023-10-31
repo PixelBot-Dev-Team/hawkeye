@@ -68,6 +68,7 @@ class AuctionLogger:
 			1 : "./lib/assets/frames/copper-frame-bg.png",
 			2 : "./lib/assets/frames/iron-frame-bg.png",
 			3 : "./lib/assets/frames/pyrite-frame-bg.png",
+			4 : "./lib/assets/frames/pixelite-frame-bg.png",
 		}
 		gems = {
 			1 : "./lib/assets/gems/emerald-frame-bg.png",
