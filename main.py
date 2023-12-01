@@ -52,5 +52,6 @@ TwitchLogger = TwitchLogger("owmince",WH_DICT["WH_TWITCH_URL"])
 # New Auction/bid, ending auction
 AuctionLogger = AuctionLogger(masterConnection,WH_DICT["WH_AUCTION_URL"])
 
+print("new ver")
 while connected:
 	time.sleep(10)
