@@ -1,10 +1,14 @@
+import time
 from datetime import datetime
 from threading import Thread
 
 from homoglyphs import Homoglyphs
 from socketio import Client
+from socketio.exceptions import ConnectionError
 
-from lib.util import background, getBadgeDict, getTimeStamp, postWebhook, getProfileData
+from lib.util import (background, getBadgeDict, getProfileData, getTimeStamp,
+                      postWebhook)
+
 
 class ChatMessage():
 	def __init__(self,messageData) -> None:
@@ -35,6 +39,7 @@ class ChatLogger:
 			self.isNonEngLogger = True
 		else:
 			self.canvas = canvas
+			self.isNonEngLogger = False
 		self.checkMessagesForSlurs = checkMessagesForSlurs
 		if self.checkMessagesForSlurs:
 			self.FILTER_FILE:list = open("./lib/filter.txt",'r').read().splitlines()
@@ -48,15 +53,23 @@ class ChatLogger:
 			"FILTERED": WH_FILTER_URL,
 		}
 		# Setup Connection
-		socketConnection = Client(reconnection=True, logger=False, engineio_logger=False)
-		socketConnection.connect("https://pixelplace.io/socket.io/", transports='websocket', namespaces=["/",])
-		socketConnection.emit(event='init', data={"authId":f"HawkEye Agent (Canvas {self.canvas})","boardId":self.canvas})
+		self.connected = False
+		while not self.connected:
+			try: 
+				socketConnection = Client(reconnection=True, logger=False, engineio_logger=False)
+				socketConnection.connect("https://pixelplace.io/socket.io/", transports='websocket', namespaces=["/",])
+				socketConnection.emit(event='init', data={"authId":f"HawkEye Agent (Canvas {self.canvas})","boardId":self.canvas})
+				self.connected = True
+			except ConnectionError:
+				print("didnt connect retrying (chatlogger)")
+				time.sleep(2)
 
+				
 		@socketConnection.on("chat.user.message")
 		@background
 		def logChat(messageData):
 			# Check if message is valid for Logger Config
-			if self.messageIsValid(messageData):
+			if not self.messageIsValid(messageData, self.startTime):
 				return
 			chatMessageObject = ChatMessage(messageData)
 			# Process /here (if no /here is found it gets set to "")
@@ -64,7 +77,8 @@ class ChatLogger:
 			# Process Main text
 			embedText = f"{embedText}{chatMessageObject.TEXT}"
 			# Process Mentions
-			embedText = f"{embedText}\n\n{chatMessageObject.MENTIONS}"			
+			if chatMessageObject.MENTIONS != "":
+				embedText = f"{embedText}\n\nMentions:{chatMessageObject.MENTIONS}"			
 			# Create Embed
 			embed = {
 				"title": f"{chatMessageObject.USERNAME}{chatMessageObject.getBadgesAsEmotes()}{chatMessageObject.USERNAME_EXTRA}{chatMessageObject.GUILD_DIVIDER}{chatMessageObject.GUILD}{chatMessageObject.GUILD_DIVIDER}{chatMessageObject.GUILD_TITLE}",

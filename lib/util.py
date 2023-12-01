@@ -18,7 +18,8 @@ def getTimeStamp() -> int:
 def getProfileData(username):
 	profileData = requests.get(f"https://pixelplace.io/api/get-user.php?username={username}").json()
 	PFP_CANVAS_ID:int = profileData["canvas"]
-	badges = str(profileData["othersIcons"]).split(",").append(profileData["premiumIcon"])
+	badges = str(profileData["othersIcons"]).split(",")
+	badges.append(profileData["premiumIcon"])
 	if profileData["vip"]:
 		badges.append("vip")
 	BADGES:str = ''.join([getBadgeDict()[badge] for badge in badges])
@@ -30,9 +31,11 @@ def getProfileData(username):
 	USERNAME_EXTRA:str = "🟨" if GOLDEN_PROFILE else ""
 	USERNAME_EXTRA = f"{USERNAME_EXTRA}🌈" if IS_RAINBOW_NAME else USERNAME_EXTRA
 	USERNAME_EXTRA = f"{USERNAME_EXTRA}🎄" if IS_XMAS_NAME else USERNAME_EXTRA
-	USERNAME_EXTRA = f"({USERNAME_EXTRA}🎃)" if IS_HALLOWEEN_NAME else f"({USERNAME_EXTRA})"
+	USERNAME_EXTRA = f"{USERNAME_EXTRA}🎃" if IS_HALLOWEEN_NAME else f"{USERNAME_EXTRA}"
+	USERNAME_EXTRA = f"({USERNAME_EXTRA})" if USERNAME_EXTRA != "" else USERNAME_EXTRA
 	
-	if GUILD := profileData["guild"] != "":
+	print(f"For debug: {profileData['guild']}")
+	if GUILD := profileData["guild"] not in ["null","None"]:
 		GUILD_RANK:int = int(profileData["guild_rank"])
 		GUILD_TITLES:dict = {1:profileData["guild_rank_1_title"],2:profileData["guild_rank_2_title"],3:profileData["guild_rank_3_title"]}
 		GUILD_TITLE:str = GUILD_TITLES[GUILD_RANK]
@@ -70,6 +73,8 @@ def getBadgeDict() -> dict[str, str]:
 	"snowball":"<:L_snowball:1161667271983378563>",
 	"vip":"<:L_vip:1161667274743226519>",
 	"":"",
+	"null":"",
+	"None":"",
 }
 
 def getItemDict():
