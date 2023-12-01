@@ -42,7 +42,7 @@ class WarLogger:
 			x = warInfo[1][0]
 			y = warInfo[1][1]
 			s = warInfo[1][2]
-			nextWar = getTimeStamp() + data["nextFight"] - warFightTime := 120
+			nextWar = getTimeStamp() + data["nextFight"] - 120 # 120 = time the fight itself takes
 			newOwner = data["ownedBy"]
 			warType = "player" if data["fightType"] == 1 else "guild"			
 			if newOwner == "":
