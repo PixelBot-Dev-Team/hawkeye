@@ -36,6 +36,7 @@ def getProfileData(username):
 	
 	print(f"For debug: {profileData['guild']}")
 	if GUILD := profileData["guild"] not in ["null","None",""]:
+		GUILD = profileData["guild"]
 		GUILD_RANK:int = int(profileData["guild_rank"])
 		GUILD_TITLES:dict = {1:profileData["guild_rank_1_title"],2:profileData["guild_rank_2_title"],3:profileData["guild_rank_3_title"]}
 		GUILD_TITLE:str = GUILD_TITLES[GUILD_RANK]
