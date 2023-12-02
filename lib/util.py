@@ -42,6 +42,7 @@ def getProfileData(username):
 		GUILD_TITLE:str = GUILD_TITLES[GUILD_RANK]
 		GUILD_DIVIDER:str = " - "
 	else:
+		GUILD = ""
 		GUILD_DIVIDER:str = ""
 		GUILD_RANK:str = ""
 		GUILD_TITLE:str = ""
