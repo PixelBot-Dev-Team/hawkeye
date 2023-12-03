@@ -52,11 +52,13 @@ class WarLogger:
 				return
 			warStats = data["stats"]
 			if data["fightType"]:
+				# player war
 				usernames = [entry["username"] for entry in warStats]
 				usernames.append("Username")
 				usernameColumnLength = len(sorted(usernames,key=len)[-1])
 			pixelsColumnLength = len(sorted([str(entry["pixels"]) for entry in warStats],key=len)[-1])
 			if data["fightType"]:
+				# player war
 				tableText = f"""{str('Username').ljust(usernameColumnLength)} | {str('Guild').center(5)} | {str('px').rjust(pixelsColumnLength)}\n{str("-") * (usernameColumnLength + pixelsColumnLength + 5 + 6)}"""
 			else:
 				tableText = f"""{str('Guild').center(5)} | {str('Users').ljust(6)} | {str('px').rjust(pixelsColumnLength)}\n{str("-") * (6 + pixelsColumnLength + 5 + 6)}"""
@@ -68,6 +70,7 @@ class WarLogger:
 				else:
 					tableText = f"""{tableText}\n{entry["guild"].ljust(5)} | {str(entry["users"]).ljust(6)} | {str(entry["pixels"]).rjust(pixelsColumnLength)}"""
 			if data["fightType"]:
+				# player war
 				tableText = f"""{tableText}\n{str("-") * (usernameColumnLength + pixelsColumnLength + 5 + 6)}\n{"Total".ljust(usernameColumnLength)} | {"----".ljust(5)} | {str(data["total"]["pixels"]).rjust(pixelsColumnLength)}"""
 			else:
 				tableText = f"""{tableText}\n{str("-") * (6 + pixelsColumnLength + 5 + 6)}\n{"Total".ljust(5)} | {str(data["total"]["users"]).ljust(6)} | {str(data["total"]["pixels"]).rjust(pixelsColumnLength)}"""
