@@ -64,7 +64,11 @@ class ChatLogger:
 				print("didnt connect retrying (chatlogger)")
 				time.sleep(2)
 
-				
+		@socketConnection.on("throw.error")
+		@background
+		def logError(error):
+			print(f"##ERROR {self.canvas} (Non-eng:{self.isNonEngLogger})  (({error}))##")
+		
 		@socketConnection.on("chat.user.message")
 		@background
 		def logChat(messageData):
