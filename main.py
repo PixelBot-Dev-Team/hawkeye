@@ -12,6 +12,7 @@ from loggers.CoinIslandLogger import CoinIslandLogger
 from loggers.WarLogger import WarLogger
 from loggers.TwitchLogger import TwitchLogger
 from loggers.AuctionLogger import AuctionLogger
+from loggers.DataLogger import DataLogger
 
 WH_DICT = os.environ.copy()
 
@@ -33,6 +34,9 @@ GlobalLog = ChatLogger(startTime,7,WH_DICT["WH_GLOBAL_URL"],WH_DICT["WH_OWMINCE_
 NonEngLog = ChatLogger(startTime,-1,WH_DICT["WH_NONENG_URL"],WH_DICT["WH_OWMINCE_URL"],WH_DICT["WH_MUTE_URL"],WH_DICT["WH_ALERT_URL"],WH_DICT["WH_MOD_URL"])
 AnarchyLog = ChatLogger(startTime,13,WH_DICT["WH_ANARCH_URL"],WH_DICT["WH_OWMINCE_URL"],WH_DICT["WH_MUTE_URL"],WH_DICT["WH_ALERT_URL"],WH_DICT["WH_MOD_URL"])
 MVPLog = ChatLogger(startTime,8,WH_DICT["WH_MVP_URL"],WH_DICT["WH_OWMINCE_URL"],WH_DICT["WH_MUTE_URL"],WH_DICT["WH_ALERT_URL"],WH_DICT["WH_MOD_URL"])
+
+# Logging stuff into the db
+Datalogger = DataLogger(masterConnection)
 
 # Chat Stats, Mutes, Announcements, Alerts, Join Leave, 
 MiscLogger = MiscLogger(masterConnection,WH_DICT["WH_MUTE_URL"],WH_DICT["WH_ANNOUNCE_URL"],WH_DICT["WH_ALERT_URL"],WH_DICT["WH_ONOFF_URL"],WH_DICT["WH_STATS_URL"])
