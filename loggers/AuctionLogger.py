@@ -27,9 +27,9 @@ class AuctionLogger:
 			# Set data 
 			auctionBid = AuctionDataModel(bidData)
 			# Create image
-			auctionImageURL = self.getAuctionURL()
 			BADGES_OWNER, _, USERNAME_EXTRA_OWNER, GUILD_OWNER, GUILD_TITLE_OWNER, GUILD_DIVIDER_OWNER = getProfileData(auctionBid.AUCTION_OWNER_NAME)	
 			BADGES_BID, _, USERNAME_EXTRA_BID, GUILD_BID, GUILD_TITLE_BID, GUILD_DIVIDER_BID = getProfileData(auctionBid.AUCTION_BID_NAME)	
+			auctionImageURL = self.getAuctionURL(auctionBid.PAINTING_ID,auctionBid.FRAME_ID,auctionBid.GEMS_ID)
 			embed = {
 				"title": f"New Bid on Auction #{auctionBid.AUCTION_ID}", 
 				"description": "",
@@ -48,7 +48,7 @@ class AuctionLogger:
 		def logAuctionWin(auctionWinData):
 			auctionWin = AuctionDataModel(auctionWinData)
 			# create image
-			auctionImageURL = self.getAuctionURL()
+			auctionImageURL = self.getAuctionURL(auctionBid.PAINTING_ID,auctionBid.FRAME_ID,auctionBid.GEMS_ID)
 			BADGES_OWNER, _, USERNAME_EXTRA_OWNER, GUILD_OWNER, GUILD_TITLE_OWNER, GUILD_DIVIDER_OWNER = getProfileData(auctionWin.AUCTION_OWNER_NAME)	
 			BADGES_BID, _, USERNAME_EXTRA_BID, GUILD_BID, GUILD_TITLE_BID, GUILD_DIVIDER_BID = getProfileData(auctionWin.AUCTION_BID_NAME)	
 			embed = {
@@ -77,7 +77,7 @@ class AuctionLogger:
 		}
 		try:
 			return self.auctionImageCache[f"{PAINTING_ID}{FRAME_ID}{GEMS_ID}"]
-		except KeyError:
+		except:
 			response = requests.get(f"https://pixelplace.io/canvas/{PAINTING_ID}.png")
 			canvas_image = Image.open(BytesIO(response.content))
 			frame_image = Image.open(frames[FRAME_ID])
