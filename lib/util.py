@@ -35,13 +35,13 @@ def getProfileData(username):
 	USERNAME_EXTRA = f"({USERNAME_EXTRA})" if USERNAME_EXTRA != "" else USERNAME_EXTRA
 	
 	print(f"For debug: {profileData['guild']}")
-	if profileData["guild"] is not None:
+	try:
 		GUILD = profileData["guild"]
 		GUILD_RANK:int = int(profileData["guild_rank"])
 		GUILD_TITLES:dict = {1:profileData["guild_rank_1_title"],2:profileData["guild_rank_2_title"],3:profileData["guild_rank_3_title"]}
 		GUILD_TITLE:str = GUILD_TITLES[GUILD_RANK]
 		GUILD_DIVIDER:str = " - "
-	else:
+	except KeyError:
 		GUILD = ""
 		GUILD_DIVIDER:str = ""
 		GUILD_RANK:str = ""
