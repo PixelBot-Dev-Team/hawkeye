@@ -56,5 +56,13 @@ TwitchLogger = TwitchLogger("owmince",WH_DICT["WH_TWITCH_URL"])
 # New Auction/bid, ending auction
 AuctionLogger = AuctionLogger(masterConnection,WH_DICT["WH_AUCTION_URL"])
 
+from lib.util import getTimeStamp, postWebhook
+embed = {
+	"title": "Event",
+	"description": "Started!",
+	}
+whdata = {"content": f"Logged <t:{getTimeStamp()}:R>","username": "HawkEye (Event Logs)","embeds": [embed],}
+postWebhook(WH_DICT["WH_EVENT_URL"], whdata)
+
 while connected:
 	time.sleep(10)
