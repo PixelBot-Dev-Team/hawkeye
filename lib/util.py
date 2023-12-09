@@ -83,7 +83,7 @@ def getItemDict():
 	return {
 	1:["Pixel Missile",".png"],
 	2:["Pixel Bomb",".png"],
-	3:["Atmic Bomb",".png"],
+	3:["Atomic Bomb",".png"],
 	4:["Premium (1 Month)",".png"],
 	5:["Premium (1 Year)",".png"],
 	6:["Rainbow Username",".gif"],
