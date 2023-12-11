@@ -48,7 +48,7 @@ class AuctionLogger:
 		def logAuctionWin(auctionWinData):
 			auctionWin = AuctionDataModel(auctionWinData)
 			# create image
-			auctionImageURL = self.getAuctionURL(auctionBid.PAINTING_ID,auctionBid.FRAME_ID,auctionBid.GEMS_ID)
+			auctionImageURL = self.getAuctionURL(auctionWin.PAINTING_ID,auctionWin.FRAME_ID,auctionWin.GEMS_ID)
 			BADGES_OWNER, _, USERNAME_EXTRA_OWNER, GUILD_OWNER, GUILD_TITLE_OWNER, GUILD_DIVIDER_OWNER = getProfileData(auctionWin.AUCTION_OWNER_NAME)	
 			BADGES_BID, _, USERNAME_EXTRA_BID, GUILD_BID, GUILD_TITLE_BID, GUILD_DIVIDER_BID = getProfileData(auctionWin.AUCTION_BID_NAME)	
 			embed = {
