@@ -34,7 +34,6 @@ def getProfileData(username):
 	USERNAME_EXTRA = f"{USERNAME_EXTRA}🎃" if IS_HALLOWEEN_NAME else f"{USERNAME_EXTRA}"
 	USERNAME_EXTRA = f"({USERNAME_EXTRA})" if USERNAME_EXTRA != "" else USERNAME_EXTRA
 	
-	print(f"For debug: {profileData['guild']}")
 	try:
 		GUILD = profileData["guild"]
 		GUILD_RANK:int = int(profileData["guild_rank"])
