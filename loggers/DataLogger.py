@@ -19,41 +19,28 @@ class DataLogger:
 			average = round(ConnectionsCount / UsersCount,2)
 			add_user_stats(getTimeStamp(),UsersCount,ConnectionsCount,average)
 			
-		@socketConnection.on("l")
-		@background
-		def saveLeaves(username):
-			if username == "":
-				return
-			add_connection_stats(getTimeStamp(),0,username)			
-			
 		@socketConnection.on("j")
 		@background
 		def saveJoins(username):
 			if username == "":
 				return
 			add_connection_stats(getTimeStamp(),1,username)			
+		
+		@socketConnection.on("l")
+		@background
+		def saveLeaves(username):
+			if username == "":
+				return
+			add_connection_stats(getTimeStamp(),0,username)				
 			
 		@socketConnection.on("item.notification.use")
 		@background
 		def saveItemUse(data):
 			username = data["from"]
-			item = data["itemName"]
+			itemId = data["item"]
 			x = data["x"]
 			y = data["y"]
-			match item:
-				case "Pixel Missile":
-					itemID = 1
-				case "Pixel Bomb":
-					itemID = 2
-				case "Atmic Bomb":
-					itemID = 3
-				case "Guild Bomb":
-					itemID = 7
-				case "Avatar Bomb":
-					itemID = 8
-				case _:
-					itemID = 0
-			add_item_stats(getTimeStamp(),itemID,f"{x},{y}",username)
+			add_item_stats(getTimeStamp(),itemId,f"{x},{y}",username)
 			
 		@socketConnection.on("coin_island_owner_change")
 		@background

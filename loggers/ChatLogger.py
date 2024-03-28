@@ -33,7 +33,6 @@ class ChatLogger:
 	"""Chat Logger for Pixelplace.io\n
 	Set canvas to `-1` to log non english chat."""
 	def __init__(self, startTime:int, canvas:int, WH_CHAT_URL:str, WH_OWMINCE_URL:str, WH_MUTE_URL:str, WH_ALERT_URL:str, WH_FILTER_URL:str, checkMessagesForSlurs:bool = True, filterOwminceMessages:bool = True) -> None:
-		# Convert data to self.
 		if canvas == -1:
 			self.canvas = 7
 			self.isNonEngLogger = True
@@ -67,7 +66,7 @@ class ChatLogger:
 		@socketConnection.on("throw.error")
 		@background
 		def logError(error):
-			print(f"##ERROR {self.canvas} (Non-eng:{self.isNonEngLogger})  (({error}))##")
+			print(f"#ERROR {self.canvas} (Non-eng:{self.isNonEngLogger})  (({error}))##")
 		
 		@socketConnection.on("chat.user.message")
 		@background

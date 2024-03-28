@@ -60,7 +60,6 @@ class MiscLogger:
 				"description": f"{username}{BADGES}{USERNAME_EXTRA}{GUILD_DIVIDER}{GUILD}{GUILD_DIVIDER}{GUILD_TITLE} left!",
 				"thumbnail":{"url": f"https://pixelplace.io/canvas/{PFP_CANVAS_ID}.png","height": 0,"width": 0},
 				}
-			# embed = {"description": f"{data}{final_badges}{usernameInsert} left!","title": "Leaves", "color": 13571349, "thumbnail":{"url": f"https://pixelplace.io/canvas/{userCanvasId}.png","height": 0,"width": 0}} #red
 			whdata = {"content": f"Logged <t:{getTimeStamp()}:R>","username": "HawkEye (Leave Logs)","embeds": [embed],}
 			postWebhook(WH_ONOFF_URL, whdata)
 					

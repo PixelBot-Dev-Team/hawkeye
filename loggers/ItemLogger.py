@@ -31,16 +31,16 @@ class ItemLogger:
 		@background
 		def logItemUse(data):
 			username = data["from"]
-			item = data["itemName"]
+			itemName = data["itemName"]
+			itemId = data["item"]
 			canvas = data["painting"]
 			x = data["x"]
 			y = data["y"]
 			zoom = 11.55
 			BADGES, _, USERNAME_EXTRA, GUILD, GUILD_TITLE, GUILD_DIVIDER = getProfileData(username)	
-			itemId = [key for key, value in getItemDict().items() if value == item][0]
 			urlExtension = getItemDict()[itemId][1]
 			embed = {
-				"title": f"{item} used!",
+				"title": f"{itemName} used!",
 				"description": f"[Take me there!](https://pixelplace.io/{canvas}#x={x}&y={y}&s={zoom})",
 				"thumbnail":{"url": f"https://pixelplace.io/img/item-{itemId}{urlExtension}","height": 0,"width": 0},
 				"fields" : [

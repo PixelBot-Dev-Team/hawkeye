@@ -13,8 +13,18 @@ from loggers.WarLogger import WarLogger
 from loggers.TwitchLogger import TwitchLogger
 from loggers.AuctionLogger import AuctionLogger
 from loggers.DataLogger import DataLogger
+from loggers.CustomAlertLogger import CustomAlertLogger
+from loggers.UpdateLogger import UpdateLogger
+from dotenv import load_dotenv
+
+try:
+	load_dotenv()
+except Exception:
+	pass
 
 WH_DICT = os.environ.copy()
+
+# ---
 
 connected = False
 
@@ -50,11 +60,19 @@ CoinIslandLogger = CoinIslandLogger(masterConnection, WH_DICT["WH_CICHANGE_URL"]
 # war start and end
 WarLogger = WarLogger(masterConnection,WH_DICT["WH_WAR_URL"])
 
+# New Auction/bid, ending auction
+AuctionLogger = AuctionLogger(masterConnection,WH_DICT["WH_AUCTION_URL"])
+
+# Pixelplace code updates
+UpdateLogger = UpdateLogger(WH_DICT["WH_UPDATE_URL"])
+
+# Custom Alerts
+CustomAlertLogger = CustomAlertLogger(masterConnection,WH_DICT["WH_CUSTOMALERT_URL"])
+
 # Owmince twitch chat
 TwitchLogger = TwitchLogger("owmince",WH_DICT["WH_TWITCH_URL"])
 
-# New Auction/bid, ending auction
-AuctionLogger = AuctionLogger(masterConnection,WH_DICT["WH_AUCTION_URL"])
+# ---
 
 from lib.util import getTimeStamp, postWebhook
 embed = {

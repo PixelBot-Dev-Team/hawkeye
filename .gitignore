@@ -1,3 +1,4 @@
 __pycache__*
 Dockerfile
-hawkeye_stats.db
+.env
+data/*
