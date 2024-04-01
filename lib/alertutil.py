@@ -97,8 +97,8 @@ def get_active_join_alerts(username):
 	conn, cursor = getCandC()
 	timestamp = getTimeStamp()
 	cursor.execute("""--sql
-		SELECT messageText, discordId FROM customWordAlerts WHERE validUntil > ?
-	""", (timestamp,))
+		SELECT discordId FROM joinAlerts WHERE validUntil > ? AND username = ?
+	""", (timestamp,username))
 	data = cursor.fetchall()
 	conn.close()
 	return data

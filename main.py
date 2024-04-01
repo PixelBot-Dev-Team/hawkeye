@@ -82,5 +82,9 @@ CustomAlertLogger = CustomAlertLogger(masterConnection,WH_DICT["WH_CUSTOMALERT_U
 # whdata = {"content": f"Logged <t:{getTimeStamp()}:R>","username": "HawkEye (Event Logs)","embeds": [embed],}
 # postWebhook(WH_DICT["WH_EVENT_URL"], whdata)
 
+from lib.util import getTimeStamp
+
+print(getTimeStamp())
+
 while connected:
 	time.sleep(10)

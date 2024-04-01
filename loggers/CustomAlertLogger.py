@@ -64,7 +64,8 @@ class CustomAlertLogger:
 				return
 			# gets a list of discord ids that want to get alerted for this
 			discordIds = get_active_join_alerts(username)
-			if discordIds is None:
+			print(discordIds)
+			if len(discordIds) == 0:
 				return
 			mentions = ' '.join(f'<@{discordId}>' for discordId in discordIds)
 			BADGES, PFP_CANVAS_ID, USERNAME_EXTRA, GUILD, GUILD_TITLE, GUILD_DIVIDER = getProfileData(username)	
