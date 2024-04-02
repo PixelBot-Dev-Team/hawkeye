@@ -143,6 +143,6 @@ def add_mute_stats(timestamp, username):
     conn.close()
     
 def getCandC():
-    conn = sqlite3.connect('./data/hawkeye_stats.db')
+    conn = sqlite3.connect('/data/hawkeye_stats.db')
     cursor = conn.cursor()
     return conn,cursor
