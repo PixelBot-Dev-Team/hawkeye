@@ -15,9 +15,9 @@ from loggers.AuctionLogger import AuctionLogger
 from loggers.DataLogger import DataLogger
 from loggers.CustomAlertLogger import CustomAlertLogger
 from loggers.UpdateLogger import UpdateLogger
-from dotenv import load_dotenv
 
 try:
+	from dotenv import load_dotenv
 	load_dotenv()
 except Exception:
 	pass
