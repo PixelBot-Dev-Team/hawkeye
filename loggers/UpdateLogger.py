@@ -15,7 +15,7 @@ class UpdateLogger():
 			with open("/data/pphash.txt","w",encoding="utf8") as saved_hash:
 				saved_hash.write(md5hash)
 				return
-		with open("data/pphash.txt","r+",encoding="utf8") as saved_hash:
+		with open("/data/pphash.txt","r+",encoding="utf8") as saved_hash:
 			old_hash = saved_hash.read()
 			new_hash = self.getCurrentHash()
 			if new_hash == old_hash:
