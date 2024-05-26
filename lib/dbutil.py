@@ -1,4 +1,5 @@
 import sqlite3
+import os
 
 # Function to create the database
 def create_database():
@@ -143,6 +144,13 @@ def add_mute_stats(timestamp, username):
     conn.close()
     
 def getCandC():
+    data_dir = '/data'
+    db_path = os.path.join(data_dir, 'hawkeye_stats.db')
+
+    # Create the directory if it doesn't exist
+    if not os.path.exists(data_dir):
+        os.makedirs(data_dir)
+
     conn = sqlite3.connect('/data/hawkeye_stats.db')
     cursor = conn.cursor()
     return conn,cursor
